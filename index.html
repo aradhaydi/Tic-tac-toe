@@ -1,16 +1,234 @@
+
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Play Tic-Tac-Toe online with AI or friends. Works offline too!">
+  <meta name="theme-color" content="#2c3e50">
+  <title>Tic-Tac-Toe PWA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+<body class="dark-mode">
+  <div class="app-container">
+    <header>
+      <div class="logo-container">
+        <svg id="app-logo" width="40" height="40" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="var(--primary-color)" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="283">
+            <animate attributeName="stroke-dashoffset" from="283" to="0" dur="1.5s" begin="0s" fill="freeze" />
+          </circle>
+          <path d="M30,30 L70,70 M70,30 L30,70" fill="none" stroke="var(--accent-color)" stroke-width="8" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="113">
+            <animate attributeName="stroke-dashoffset" from="113" to="0" dur="1s" begin="0.5s" fill="freeze" />
+          </path>
+        </svg>
+        <h1>Tic-Tac-Toe</h1>
+      </div>
+      <div class="controls">
+        <button id="settings-btn" aria-label="Settings">
+          <i class="fas fa-cog"></i>
+        </button>
+        <button id="theme-toggle" aria-label="Toggle dark/light mode">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button id="music-toggle" aria-label="Toggle music">
+          <i class="fas fa-music"></i>
+        </button>
+      </div>
+    </header>
 
-<body>
-  Hello world
+    <main>
+      <div id="game-selection" class="screen active">
+        <h2>Select Game Mode</h2>
+        <div class="button-group">
+          <button id="vs-ai" class="btn primary-btn">
+            <i class="fas fa-robot"></i> Play vs AI
+          </button>
+          <button id="vs-player" class="btn primary-btn">
+            <i class="fas fa-user-friends"></i> 2 Players
+          </button>
+          <button id="show-leaderboard" class="btn secondary-btn">
+            <i class="fas fa-trophy"></i> Leaderboard
+          </button>
+        </div>
+      </div>
+
+      <div id="ai-difficulty" class="screen">
+        <h2>Select Difficulty</h2>
+        <div class="button-group">
+          <button id="easy" class="btn primary-btn">Easy</button>
+          <button id="medium" class="btn primary-btn">Medium</button>
+          <button id="hard" class="btn primary-btn">Hard</button>
+          <button id="back-from-difficulty" class="btn secondary-btn">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+        </div>
+      </div>
+
+      <div id="game-board" class="screen">
+        <div class="game-info">
+          <div id="player-info">
+            <span id="current-player" class="player-x">Player X's turn</span>
+            <div class="score-display">
+              <div class="score">
+                <span class="player-x">X: <span id="score-x">0</span></span>
+              </div>
+              <div class="score">
+                <span class="player-o">O: <span id="score-o">0</span></span>
+              </div>
+              <div class="score">
+                <span class="player-tie">Ties: <span id="score-tie">0</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="board">
+          <div class="cell" data-index="0"></div>
+          <div class="cell" data-index="1"></div>
+          <div class="cell" data-index="2"></div>
+          <div class="cell" data-index="3"></div>
+          <div class="cell" data-index="4"></div>
+          <div class="cell" data-index="5"></div>
+          <div class="cell" data-index="6"></div>
+          <div class="cell" data-index="7"></div>
+          <div class="cell" data-index="8"></div>
+        </div>
+
+        <div class="button-group">
+          <button id="reset-game" class="btn primary-btn">
+            <i class="fas fa-redo"></i> Reset Game
+          </button>
+          <button id="back-to-menu" class="btn secondary-btn">
+            <i class="fas fa-home"></i> Main Menu
+          </button>
+        </div>
+      </div>
+
+      <div id="leaderboard" class="screen">
+        <h2>Leaderboard</h2>
+        <div class="leaderboard-container">
+          <table id="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Ties</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <!-- Leaderboard data will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+        <button id="back-from-leaderboard" class="btn secondary-btn">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+      </div>
+    </main>
+
+    <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Settings</h2>
+          <button id="close-settings" class="close-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-group">
+            <h3>Game Settings</h3>
+            <div class="setting">
+              <label for="sound-toggle">Sound Effects</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="sound-toggle" checked>
+                <span class="toggle-slider"></span>
+              </div>
+            </div>
+            <div class="setting">
+              <label for="music-toggle-setting">Background Music</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="music-toggle-setting" checked>
+                <span class="toggle-slider"></span>
+              </div>
+            </div>
+            <div class="setting">
+              <label for="ai-difficulty-setting">AI Difficulty</label>
+              <select id="ai-difficulty-setting">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+          </div>
+          <div class="settings-group">
+            <h3>Appearance</h3>
+            <div class="setting">
+              <label for="theme-toggle-setting">Dark Mode</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="theme-toggle-setting" checked>
+                <span class="toggle-slider"></span>
+              </div>
+            </div>
+            <div class="setting">
+              <label for="x-color">X Color</label>
+              <input type="color" id="x-color" value="#3498db">
+            </div>
+            <div class="setting">
+              <label for="o-color">O Color</label>
+              <input type="color" id="o-color" value="#e74c3c">
+            </div>
+            <div class="setting">
+              <label for="grid-color">Grid Color</label>
+              <input type="color" id="grid-color" value="#95a5a6">
+            </div>
+          </div>
+          <div class="button-group">
+            <button id="reset-settings" class="btn danger-btn">Reset All Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-result" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="result-message">You Win!</h2>
+        </div>
+        <div class="modal-body">
+          <div class="confetti-container" id="confetti-container"></div>
+          <p id="result-details">You beat the AI on medium difficulty!</p>
+          <div class="button-group">
+            <button id="play-again" class="btn primary-btn">Play Again</button>
+            <button id="back-to-main" class="btn secondary-btn">Main Menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="splash-screen">
+    <div class="splash-content">
+      <svg id="splash-logo" width="100" height="100" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#3498db" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="283">
+          <animate attributeName="stroke-dashoffset" from="283" to="0" dur="1.5s" begin="0s" fill="freeze" />
+        </circle>
+        <path d="M30,30 L70,70 M70,30 L30,70" fill="none" stroke="#e74c3c" stroke-width="8" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="113">
+          <animate attributeName="stroke-dashoffset" from="113" to="0" dur="1s" begin="0.5s" fill="freeze" />
+        </path>
+      </svg>
+      <h1>Tic-Tac-Toe</h1>
+      <p>Loading...</p>
+    </div>
+  </div>
+  
   <script src="script.js"></script>
+  <script src="sw-register.js"></script>
 </body>
-
 </html>
