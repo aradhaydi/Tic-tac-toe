@@ -38,30 +38,21 @@ const settings = {
 
 // Audio elements
 const sounds = {
-  click: null,
-  win: null,
-  lose: null,
-  tie: null,
-  bgMusic: null
+  click: new Audio(),
+  win: new Audio(),
+  lose: new Audio(),
+  tie: new Audio(),
+  bgMusic: new Audio()
 };
 
-// Initialize sounds - we'll create them only when needed to avoid autoplay restrictions
-function initSounds() {
-  try {
-    // Use shorter, more reliable audio files
-    if (!sounds.click) sounds.click = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLHPM+N2JSxMSQajj9tijaCoZKHu43Pbuv5JEKxlQlNDx8tnDdk0nE0yR0Pf67M+kfWE3GzOEuuX89uTOoIZtRiMZJHGw4f3++OvgyLCQdVItFRIuhNT4/v/9+fDew6uYhmM5GwgwltX0/P7/+vXr1rygkHlbLx8MFTiU2/j9/v/6+fPjxK2XgmxLKyMLECSb5/j7/f77+fbw1r6olHpjQisWDAshq/L6+/v7+/r39OrhxbCaiXVWMyINFTKb3PT6+vv8/Pz69e7lyLaejHRbOiQQCRpHwu/1+Pn6/f39/frz69zFrpmDaDwpGg0JI7Pq8/j4+vv8/f39+/jx3MWvnYdwTDAcDQkTYeTw9fb5+/v8/f39/frx5tDAtZyEYjokEwwLHarn8PT3+fr7/Pz9/f37+e7ew7KchWpFKxcJCSOq7vL09vn6+/z8/f39/PjqzbuolIBqSzAeCgcaaMXs8vX3+Pn6/Pz9/f39+uLLtqOPdlY3JRILCSGk6O/z9vj5+vv8/P39/v7366p3Ui0gGhgaHB0dHRwbGhkYFxcWFxcNBgkDA+Ps+gcICQoLCwsKCQcGBQMDAv381G0cBRITFRYXGBgYFxYVEtbv/QABAQEBAgICAgICAgICAgEB3NtuHQcCKMLk+vz8+/v7+/v7+vr5+PjRZC4dh9bo+Pr7+/z8/P39/f5P3a/Z4On0+vz9/v////////////////3q1rKAbn6Xq7vI09upkXhzd4WOnJ+ciXFHPEVTVk9EMR4GCAAAAAQIFB0sP09bYmj/j0YREhITFBUYGRsfIycqKzAzMzY6pZ5EGQcICgsNDxETFBYYGhsdHiEjJCYoKcTszJGQkZOVlpeZmpydnp+goaGio6Spw9d+KJ7M3+Pl5ebm5+fn6Ojp6enp6ens9Pyuh1Uwd5ars7m+wsXJzM/S1NbY2drc29rZobV7XEVJYm12fIOIjZGUl5mcnqCtp6KeloE9S01JQz83MSolIyAfHh4dHR0dHRwbGhgYHC08WYjC6h0UEA4NCwkHBgQCAgEBAQECAgMEBAMMN15ICAkKCwwODg8REhMUFRYXGBkbHB0eHyEiIyUnvO+1HSEkJigrLS8xMzQ2Nzk6Ozw9PT4+Pj5AT2mw8k8sKCUjIR8eHRsaGRgXFhYUFBMTEhERFyArS4HI9lkzKiYjIR8eHRsaGRcWFRQTERAPDg0MCwsafJ6jm5WNhoN/e3ZybmpmYl5bV1RSUEx6pcIrAQECAwQFBgcICQoLDA0ODxARERITFBQVFhkrTO64OTo8PT9AQkNERUZHSElKS0xNTU5OT1BQV26f2HNMSkhGREJAPjw6ODc1MzIxLy4tKyspKSku9p6am5ydnZ6en5+fn5+goKCgoKCgoKCgoKOrv3WsrKysrKysrKurq6urq6urq6urq6urqcPdnw==');
-    if (!sounds.win) sounds.win = new Audio('data:audio/wav;base64,UklGRpYFAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YXIFAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA==');
-    if (!sounds.lose) sounds.lose = new Audio('data:audio/wav;base64,UklGRpAFAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YWwFAAB0dXVdR0I/QkVCR0xRWF1gX11cXWBjZGZoaWtvc3Fxc3JzdHV1dHRzdHRwbGppZ2VjX1xbWldVUlFPTE1NRkM/PDw5ODY1MzEwMC8vLy8vLy8wMTEzNDU2Nzo8PT9BQ0VHS05RU1VXWVtdYGJjZWdpbGxucXN0dXZ3eHh5enp7e3x7fHt7fHt7enp5enl5eHd3d3d2dnV1dHRzcnJxcXBwbm5tbGxramppaWhoZ2ZmZmVlZWVjY2JiYmJiYmFgX19fX11dXFxbW1pZWVlYV1dXV1ZVVVRUVFNTUlJSUlFRUVFQUFBPTk5OTk1NTEtLS0tKSklJSUlJSEhIR0dHR0dHR0dGRkZGRkZFRUVERURERERDQ0NDQkJCQkFBQUFBQEA/Pz8/Pz4+Pj09PT09PD08Ozs7Ozs6Ojo6Ojo5OTk5OTk4ODg4ODg4Nzc3Nzc3Nzc3Nzc3Nzc2NjY2NjY2NTU1NTU0NDM0MzQ0NDQzMzMzMzMyMjIyMjIyMjIyMjIxMTExMTExMTEwMDAwMDAwMDAvLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLA==');
-    if (!sounds.tie) sounds.tie = new Audio('data:audio/wav;base64,UklGRqYFAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YYIFAAAzMzMzMzMzMzMzM9nZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZMzMzMzMzMzMzMzMzMzOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OzjMzMzMzMzMzMzMzMzMzMzMzMwEAAAAAAAAAAICA7Ozs7Ozs7Ozs7Ozs7Ozs7OwAAAAAAAAAAADMzMzMzMzMzMzMzDMzMzMzM7OzMzMzMzMzMzMzMzMzMzMzs7Ozs7MzMzMzMzMzMzMzMzMzMzMzMzMzgICAgICAgICAgICAgICAgICAgICAgICAgICAgMzMzMzMzMzMzMzAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgDMzMzMzMzMzMzMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzMzMzMzMzMzMzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OzszMzMzMzMzMzMzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OzMzMzMzMzMzMwEAAAAAAAAAAICAgICAgICAgICAgICAgICAgICAgIAAAAAAAAAAAADMzMzMzMzMzMwzMzMzMzOzszMzMzMzMzMzMzMzMzMzMzOzs7OzszMzMzMzMzMzMwzMzMzMzMzMzMzMAAAAAICAgICAgICAgICAgDOzs7Ozs7Ozs7OzszMzMzMzMzMzM7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7MzMzMzMzMzMzMzMzMzMzMzMzMzMzPZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2TMzMzMzMzMzMzMzMzMzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs4zMzMzMzMzMzMzMzMzMzMzMzMzAQAAAAAAAAAAgIDs7Ozs7Ozs7Ozs7Ozs7Ozs7AAAAAAAAAAAADMzMzMzMzMzMzMzDMzMzMzM7OzMzMzMzMzMzMzMzMzMzMzs7Ozs7MzMzMzMzMzMzMzMzMzMzMzMzMzgICAgICAgICAgICAgICAgICAgICAgICAgICAgMzMzMzMzMzMzMzAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgDMzMzMzMzMzMzMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzMzMzMzMzMzMzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OzszMzMzMzMzMzMzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OzMzMzMzMzMzMwEAAAAAAAAAAICAgICAgICAgICAgICAgICAgICAgIAAAAAAAAAAAADMzMzMzMzMzMwzMzMzMzOzszMzMzMzMzMzMzMzMzMzMzOzs7OzszMzMzMzMzMzMwzMzMzMzMzMzMzMAAAAAICAgICAgICAgICAgDOzs7Ozs7Ozs7OzszMzMzMzMzMzM7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7MzMzMzMzMzMzMzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
-    if (!sounds.bgMusic) {
-      sounds.bgMusic = new Audio('data:audio/wav;base64,UklGRigFAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQQFAACCd2lnZ2RiZGZsa21vcW9sampjYF1WVVRWU1VTU1JTVFZYWl5naWxzd3l+goSEh4qHiYeFg4F8eHJrY1xVTEY/OjQwLCkmJiUmJicoKy0uMjQ3Oj9FS1FXXGJnbnR6gIKGjY+SmJueoaOlp6mpqqmopaSioJ6bl5OPiYOBfHhzcW1qZmRhYF5fXl5fYGFiZWdpa25xdHd5fYCCg4eLj5GVmJueoa+zt7u/wsXIy8zQ0tTW1djZ2dfV0c7Kx8PAu7azrqmloJqTjYd/d3BnXlVNRDswKiMeGBMPDAoIBwcHCAgKDA4RFBcbHyQpLzU8RExVXWhye4aRm6WwucXP197m7fT69v37/vz69PPu6ePd1tDJwr21rqWbkIZkYVhPRDozLigkIyQpLzY+R09YYWpzfIWNk5qhp62ytri7vL6+vLq3tLCsp6KdmJONh4J9eHRwbGlmY2BdXFpZWVhYWVlbXF5fYWRnaWxvcXR3eXx+gYOFh4qMjo+QkZGSkpOTk5OCdmtnZ2RiZGZsa21vcW9sampjYF1WVVRWU1VTU1JTVFZYWl5naWxzd3l+goSEh4qHiYeFg4F8eHJrY1xVTEY/OjQwLCkmJiUmJicoKy0uMjQ3Oj9FS1FXXGJnbnR6gIKGjY+SmJueoaOlp6mpqqmopaSioJ6bl5OPiYOBfHhzcW1qZmRhYF5fXl5fYGFiZWdpa25xdHd5fYCCg4eLj5GVmJueoa+zt7u/wsXIy8zQ0tTW1djZ2dfV0c7Kx8PAu7azrqmloJqTjYd/d3BnXlVNRDswKiMeGBMPDAoIBwcHCAgKDA4RFBcbHyQpLzU8RExVXWhye4aRm6WwucXP197m7fT69v37/vz69PPu6ePd1tDJwr21rqWbkIZkYVhPRDozLigkIyQpLzY+R09YYWpzfIWNk5qhp62ytri7vL6+vLq3tLCsp6KdmJONh4J9eHRwbWloZGJfXl1dXF1cXF1dXl9hY2VoaWxucHJ1+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+g==');
-      sounds.bgMusic.loop = true;
-      sounds.bgMusic.volume = 0.3;
-    }
-  } catch(e) {
-    console.error("Failed to initialize sounds", e);
-  }
-}
+// Initialize sounds
+sounds.click.src = 'https://assets.mixkit.co/sfx/preview/mixkit-simple-countdown-922.mp3';
+sounds.win.src = 'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3';
+sounds.lose.src = 'https://assets.mixkit.co/sfx/preview/mixkit-negative-guitar-tone-2324.mp3';
+sounds.tie.src = 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3';
+sounds.bgMusic.src = 'https://assets.mixkit.co/sfx/preview/mixkit-game-level-music-689.mp3';
+sounds.bgMusic.loop = true;
+sounds.bgMusic.volume = 0.3;
 
 // DOM Elements
 const elements = {
@@ -129,6 +120,14 @@ const elements = {
 
 // Initialize the game
 function init() {
+  // Hide splash screen after animation completes
+  setTimeout(() => {
+    elements.splashScreen.classList.add('hidden');
+    setTimeout(() => {
+      elements.splashScreen.style.display = 'none';
+    }, 500);
+  }, 2000);
+
   // Load settings
   loadSettings();
   
@@ -146,40 +145,6 @@ function init() {
 
   // Initialize leaderboard
   initLeaderboard();
-  
-  // Handle splash screen interaction for audio permission
-  elements.splashScreen.addEventListener('click', () => {
-    // Initialize audio context on user interaction
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (AudioContext) {
-      const audioCtx = new AudioContext();
-      window.audioContextInitialized = true;
-    }
-    
-    // Initialize sounds
-    initSounds();
-    
-    // Try playing background music if enabled
-    if (settings.musicEnabled) {
-      sounds.bgMusic.play().catch(e => console.log('Music play error:', e));
-    }
-    
-    // Hide splash screen after click
-    elements.splashScreen.classList.add('hidden');
-    setTimeout(() => {
-      elements.splashScreen.style.display = 'none';
-    }, 500);
-  });
-  
-  // If not clicked after 3 seconds, auto-hide splash screen
-  setTimeout(() => {
-    if (!elements.splashScreen.classList.contains('hidden')) {
-      elements.splashScreen.classList.add('hidden');
-      setTimeout(() => {
-        elements.splashScreen.style.display = 'none';
-      }, 500);
-    }
-  }, 3000);
 }
 
 // ==========================================================
@@ -786,38 +751,27 @@ function applySettings() {
   document.documentElement.style.setProperty('--o-color', settings.oColor);
   document.documentElement.style.setProperty('--grid-color', settings.gridColor);
   
-  // Wait for DOM to be fully loaded before accessing settings elements
-  setTimeout(() => {
-    try {
-      // Make sure elements exist before trying to update them
-      if (elements.settings.soundToggle) elements.settings.soundToggle.checked = settings.soundEnabled;
-      if (elements.settings.musicToggle) elements.settings.musicToggle.checked = settings.musicEnabled;
-      if (elements.settings.aiDifficultySelect) elements.settings.aiDifficultySelect.value = settings.aiDifficulty;
-      if (elements.settings.themeToggle) elements.settings.themeToggle.checked = settings.darkMode;
-      if (elements.settings.xColor) elements.settings.xColor.value = settings.xColor;
-      if (elements.settings.oColor) elements.settings.oColor.value = settings.oColor;
-      if (elements.settings.gridColor) elements.settings.gridColor.value = settings.gridColor;
-      
-      // Update theme toggle button
-      if (elements.buttons.themeToggle) {
-        elements.buttons.themeToggle.innerHTML = settings.darkMode 
-          ? '<i class="fas fa-moon"></i>' 
-          : '<i class="fas fa-sun"></i>';
-      }
-      
-      // Update music toggle button
-      if (elements.buttons.musicToggle) {
-        elements.buttons.musicToggle.innerHTML = settings.musicEnabled 
-          ? '<i class="fas fa-music"></i>' 
-          : '<i class="fas fa-volume-mute"></i>';
-      }
-      
-      // Apply music setting
-      toggleBackgroundMusic();
-    } catch (e) {
-      console.error('Error applying settings:', e);
-    }
-  }, 100);
+  // Update settings form
+  elements.settings.soundToggle.checked = settings.soundEnabled;
+  elements.settings.musicToggle.checked = settings.musicEnabled;
+  elements.settings.aiDifficultySelect.value = settings.aiDifficulty;
+  elements.settings.themeToggle.checked = settings.darkMode;
+  elements.settings.xColor.value = settings.xColor;
+  elements.settings.oColor.value = settings.oColor;
+  elements.settings.gridColor.value = settings.gridColor;
+  
+  // Update theme toggle button
+  elements.buttons.themeToggle.innerHTML = settings.darkMode 
+    ? '<i class="fas fa-moon"></i>' 
+    : '<i class="fas fa-sun"></i>';
+  
+  // Update music toggle button
+  elements.buttons.musicToggle.innerHTML = settings.musicEnabled 
+    ? '<i class="fas fa-music"></i>' 
+    : '<i class="fas fa-volume-mute"></i>';
+  
+  // Apply music setting
+  toggleBackgroundMusic();
 }
 
 // Apply theme
@@ -839,75 +793,24 @@ function applyTheme() {
 function playSound(type) {
   if (!settings.soundEnabled) return;
   
-  try {
-    // Initialize sounds if needed
-    initSounds();
-    
-    const sound = sounds[type];
-    if (sound) {
-      // Reset sound to beginning
-      sound.currentTime = 0;
-      
-      // For mobile compatibility, we need a user gesture to play audio
-      // So we make the first click initialize the audio context
-      if (window.audioContextInitialized !== true) {
-        // Create and start a silent audio context to enable audio on mobile
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) {
-          const audioCtx = new AudioContext();
-          window.audioContextInitialized = true;
-        }
-      }
-      
-      // Play with error handling
-      const playPromise = sound.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(e => {
-          console.log('Error playing sound:', e);
-          // Create a temporary audio context to unblock audio
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) {
-            const audioCtx = new AudioContext();
-            audioCtx.resume().then(() => {
-              window.audioContextInitialized = true;
-            });
-          }
-        });
-      }
-    }
-  } catch (e) {
-    console.log('Sound playback error:', e);
+  const sound = sounds[type];
+  if (sound) {
+    sound.currentTime = 0;
+    sound.play().catch(e => console.log('Error playing sound:', e));
   }
 }
 
 // Toggle background music
 function toggleBackgroundMusic() {
-  // Initialize sounds if needed
-  initSounds();
-  
-  if (settings.musicEnabled && sounds.bgMusic) {
-    // For mobile compatibility
-    if (window.audioContextInitialized !== true) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (AudioContext) {
-        const audioCtx = new AudioContext();
-        window.audioContextInitialized = true;
-      }
-    }
-    
-    const playPromise = sounds.bgMusic.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(e => {
-        console.log('Error playing background music:', e);
-        // Add a message to inform the user they need to interact with the page
-        document.addEventListener('click', () => {
-          if (settings.musicEnabled && sounds.bgMusic) {
-            sounds.bgMusic.play().catch(err => console.log('Failed to play music on click:', err));
-          }
-        });
-      });
-    }
-  } else if (sounds.bgMusic) {
+  if (settings.musicEnabled) {
+    sounds.bgMusic.play().catch(e => {
+      console.log('Error playing background music:', e);
+      // Try again on user interaction
+      document.addEventListener('click', () => {
+        sounds.bgMusic.play().catch(err => console.log('Failed to play music on click:', err));
+      }, { once: true });
+    });
+  } else {
     sounds.bgMusic.pause();
   }
 }

@@ -225,33 +225,8 @@
       </svg>
       <h1>Tic-Tac-Toe</h1>
       <p>Loading...</p>
-      <button id="audio-enable" class="btn primary-btn">Tap to enable sound & music</button>
     </div>
   </div>
-  
-  <script>
-    // Add click event for the audio enable button
-    document.addEventListener('DOMContentLoaded', function() {
-      const audioButton = document.getElementById('audio-enable');
-      if (audioButton) {
-        audioButton.addEventListener('click', function() {
-          // Initialize audio context
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) {
-            const audioCtx = new AudioContext();
-            audioCtx.resume().then(() => {
-              window.audioContextInitialized = true;
-              // Hide splash screen
-              document.getElementById('splash-screen').classList.add('hidden');
-              setTimeout(() => {
-                document.getElementById('splash-screen').style.display = 'none';
-              }, 500);
-            });
-          }
-        });
-      }
-    });
-  </script>
   
   <script src="script.js"></script>
   <script src="sw-register.js"></script>
