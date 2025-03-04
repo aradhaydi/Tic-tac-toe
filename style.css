@@ -290,21 +290,21 @@ h2::after {
 .button-group {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 0.8rem;
   width: 100%;
-  max-width: 320px;
+  max-width: 280px;
 }
 
 .btn {
-  padding: 1.2rem 1.8rem;
-  border-radius: 16px;
-  font-size: 1.1rem;
+  padding: 0.9rem 1.4rem;
+  border-radius: 14px;
+  font-size: 1rem;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
+  gap: 0.7rem;
   letter-spacing: 0.02em;
   position: relative;
   overflow: hidden;
@@ -409,16 +409,16 @@ h2::after {
 
 /* ===== GAME BOARD STYLES ===== */
 .game-info {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   text-align: center;
-  padding: 1.5rem;
+  padding: 0.8rem;
   background: rgba(255, 255, 255, 0.07);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  max-width: 380px;
+  max-width: 340px;
   margin-left: auto;
   margin-right: auto;
   transform: translateZ(0);
@@ -426,8 +426,8 @@ h2::after {
 }
 
 .game-info:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .player-x {
@@ -446,16 +446,16 @@ h2::after {
 }
 
 #current-player {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 700;
   display: block;
-  margin-bottom: 0.8rem;
-  padding: 0.8rem;
-  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.08);
   transition: all 0.3s ease;
   animation: pulse-grow 1.5s infinite;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes pulse-grow {
@@ -465,8 +465,8 @@ h2::after {
   }
   50% {
     opacity: 1;
-    transform: scale(1.05);
-    text-shadow: 0 0 15px currentColor;
+    transform: scale(1.03);
+    text-shadow: 0 0 10px currentColor;
   }
   100% {
     opacity: 0.85;
@@ -477,48 +477,48 @@ h2::after {
 .score-display {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  padding: 0.8rem;
-  font-size: 1.2rem;
+  gap: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  margin-top: 1rem;
+  border-radius: 10px;
+  margin-top: 0.5rem;
 }
 
 .score {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
   transition: all 0.3s ease;
   background: rgba(255, 255, 255, 0.05);
 }
 
 .score:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 15px;
+  gap: 12px;
   width: 100%;
-  max-width: 380px;
+  max-width: 320px;
   aspect-ratio: 1/1;
-  margin: 0 auto 2.5rem;
+  margin: 0 auto 1.5rem;
   position: relative;
-  padding: 15px;
+  padding: 12px;
   background: rgba(var(--primary-color-rgb), 0.15);
-  border-radius: 24px;
+  border-radius: 18px;
   box-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.2), 
-    inset 0 0 15px rgba(255, 255, 255, 0.1);
+    0 15px 35px rgba(0, 0, 0, 0.2), 
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
   transform-style: preserve-3d;
-  perspective: 1200px;
-  transform: rotateX(5deg);
-  transition: transform 0.5s ease;
+  perspective: 1000px;
+  transform: rotateX(3deg);
+  transition: transform 0.4s ease;
 }
 
 .board:hover {
@@ -1252,6 +1252,66 @@ input[type="color"] {
   }
 }
 
+/* ===== PWA SPECIFIC STYLES ===== */
+.offline-mode header::after {
+  content: "📴 Offline Mode";
+  display: block;
+  font-size: 0.8rem;
+  text-align: center;
+  background-color: #ff9800;
+  color: #000;
+  padding: 3px;
+  width: 100%;
+  position: absolute;
+  bottom: -22px;
+  left: 0;
+  font-weight: bold;
+}
+
+.network-status {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  padding: 10px 20px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  color: #000;
+  font-weight: bold;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.5s ease-in-out;
+}
+
+.network-status.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+.network-status.online {
+  background: rgba(46, 204, 113, 0.9);
+  color: white;
+}
+
+.network-status.offline {
+  background: rgba(231, 76, 60, 0.9);
+  color: white;
+}
+
+.network-status i {
+  font-size: 1.2rem;
+}
+
+/* Standalone mode adjustments */
+.standalone-mode {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
 /* ===== ANIMATIONS AND EFFECTS ===== */
 @keyframes float {
   0%, 100% {
@@ -1319,6 +1379,13 @@ input[type="color"] {
 
 /* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 768px) {
+  html, body {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+  }
+  
   .cell {
     font-size: 2.5rem;
   }
@@ -1343,6 +1410,36 @@ input[type="color"] {
   .btn {
     padding: 1rem 1.5rem;
   }
+  
+  /* Make all screens scrollable */
+  main, .screen {
+    overflow-y: auto;
+    min-height: auto;
+  }
+  
+  /* Ensure player info is more compact */
+  .game-info {
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    transform: none !important;
+  }
+  
+  #player-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Make the player turn and scores more visible */
+  #current-player {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 4px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1360,8 +1457,8 @@ input[type="color"] {
   }
 
   .score-display {
-    gap: 1rem;
-    font-size: 1rem;
+    gap: 0.8rem;
+    font-size: 0.9rem;
   }
 
   .setting {
@@ -1380,17 +1477,68 @@ input[type="color"] {
   }
   
   .controls button {
-    width: 36px;
-    height: 36px;
-    font-size: 1rem;
+    width: 34px;
+    height: 34px;
+    font-size: 0.95rem;
   }
   
   .primary-btn, .secondary-btn {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
   
   #current-player {
+    font-size: 1.1rem;
+  }
+  
+  /* Optimize player info area */
+  .game-info {
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+  }
+}
+
+/* Small screen width optimizations */
+@media (max-width: 350px) {
+  .app-container {
+    padding: 0.5rem;
+  }
+  
+  header {
+    padding: 0.6rem;
+  }
+  
+  .logo-container h1 {
     font-size: 1.3rem;
+  }
+  
+  .board {
+    max-width: 240px;
+    gap: 8px;
+  }
+  
+  .score-display {
+    gap: 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.1rem;
+  }
+  
+  .controls button {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+  }
+  
+  #current-player {
+    font-size: 1rem;
+    padding: 0.4rem;
+  }
+  
+  .score {
+    padding: 0.25rem 0.5rem;
   }
 }
 
@@ -1417,65 +1565,204 @@ input[type="color"] {
 
 /* Improved mobile responsiveness for extra small height screens */
 @media (max-height: 600px) {
+  html, body {
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+  }
+  
   .app-container {
     padding: 0.5rem;
     justify-content: flex-start;
+    min-height: auto;
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
   header {
     margin-bottom: 0.5rem;
-    padding: 0.8rem;
+    padding: 0.5rem;
+    position: relative;
   }
   
   .logo-container h1 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
   
   .controls button {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
   }
   
   .board {
-    max-height: 230px;
-    max-width: 230px;
-    margin-bottom: 1rem;
-    gap: 8px;
+    max-height: 180px;
+    max-width: 180px;
+    margin: 0.4rem auto;
+    gap: 5px;
+    padding: 5px;
   }
   
   .game-info {
-    margin-bottom: 0.8rem;
-    padding: 0.6rem;
+    margin-bottom: 0.4rem;
+    padding: 0.3rem;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    transform: none !important;
+    max-width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 8px;
+  }
+  
+  #player-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 0.75rem;
   }
   
   #current-player {
-    font-size: 1.1rem;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.3rem;
+    margin-bottom: 0.2rem;
+    width: 100%;
+    text-align: center;
+    animation: none;
   }
   
   .score-display {
-    padding: 0.5rem;
-    gap: 0.8rem;
-    font-size: 0.9rem;
+    padding: 0.2rem;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    flex-wrap: nowrap;
+    justify-content: center;
+    margin-top: 0.2rem;
+    width: 100%;
   }
   
   .score {
-    padding: 0.3rem 0.6rem;
+    padding: 0.15rem 0.3rem;
+    margin: 0;
+    font-size: 0.7rem;
   }
   
   .button-group {
-    gap: 0.7rem;
+    gap: 0.3rem;
+    margin-bottom: 0;
+    max-width: 220px;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+    min-height: auto;
+    height: auto;
+    box-shadow: none;
+    transform: none !important;
+  }
+  
+  /* Make sure modals don't overflow */
+  .modal-content {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 0.8rem;
+  }
+  
+  /* Improved scrolling */
+  main {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+  }
+  
+  /* Make game screens fit better */
+  .screen {
+    padding: 0.5rem;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+}
+
+/* Extra small height screens */
+@media (max-height: 500px) {
+  header {
+    padding: 0.3rem;
+  }
+  
+  .logo-container h1 {
+    font-size: 1rem;
+  }
+  
+  .logo-container svg {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .controls button {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+  }
+  
+  .board {
+    max-height: 150px;
+    max-width: 150px;
+  }
+  
+  .btn {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.4rem;
+  }
+  
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+  
+  #reset-game, #back-to-menu {
+    margin-bottom: 0;
+    white-space: nowrap;
   }
   
   h2 {
     font-size: 1.4rem;
     margin-bottom: 1rem;
+  }
+  
+  /* Make all screens scrollable */
+  main {
+    min-height: auto;
+    padding: 0.3rem 0;
+    height: auto;
+    overflow-y: auto;
+  }
+  
+  .screen {
+    overflow-y: visible;
+    position: relative;
+    top: auto;
+    left: auto;
+    height: auto;
+    min-height: auto;
+    padding-bottom: 0.5rem;
+  }
+  
+  /* Ensure main container is scrollable if content overflows */
+  body, html {
+    overflow-y: auto !important;
+  }
+  
+  .app-container {
+    overflow-y: visible;
   }
 }
 
@@ -1495,8 +1782,8 @@ input[type="color"] {
   }
   
   .board {
-    max-height: 160px;
-    max-width: 160px;
+    max-height: 150px;
+    max-width: 150px;
     gap: 5px;
     padding: 8px;
     margin-bottom: 0.5rem;
@@ -1512,34 +1799,42 @@ input[type="color"] {
   
   .game-info {
     transform: none !important;
-    padding: 0.5rem;
+    padding: 0.4rem;
     margin-bottom: 0.3rem;
+    max-width: 320px;
   }
   
   #current-player {
-    font-size: 0.9rem;
-    padding: 0.3rem;
-    margin-bottom: 0.3rem;
+    font-size: 0.8rem;
+    padding: 0.25rem;
+    margin-bottom: 0.25rem;
   }
   
   .score-display {
-    padding: 0.3rem;
-    gap: 0.5rem;
-    font-size: 0.8rem;
+    padding: 0.25rem;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   
   .score {
-    padding: 0.2rem 0.4rem;
+    padding: 0.15rem 0.35rem;
+    font-size: 0.75rem;
   }
   
   .button-group {
     gap: 0.4rem;
+    margin-top: 0.3rem;
   }
   
   .btn {
-    padding: 0.4rem 0.7rem;
-    font-size: 0.8rem;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
     margin-bottom: 0;
+    white-space: nowrap;
   }
   
   .modal-content {
@@ -1580,26 +1875,28 @@ input[type="color"] {
 @media (max-height: 380px) {
   .app-container {
     justify-content: flex-start;
+    padding: 0.4rem;
   }
   
   header {
     margin-bottom: 0.2rem;
-    padding: 0.5rem;
+    padding: 0.4rem;
   }
   
   .logo-container h1 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
   .controls button {
-    width: 28px;
-    height: 28px;
-    font-size: 0.8rem;
+    width: 26px;
+    height: 26px;
+    font-size: 0.75rem;
   }
   
   .board {
-    max-height: 130px;
-    max-width: 130px;
+    max-height: 120px;
+    max-width: 120px;
+    margin-bottom: 0.4rem;
   }
   
   /* Make main menu better fit */
@@ -1608,12 +1905,361 @@ input[type="color"] {
   }
   
   .screen h2 {
-    margin-bottom: 0.8rem;
-    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
   }
   
   .screen .button-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+  }
+  
+  /* Super compact player info */
+  .game-info {
+    padding: 0.3rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  #current-player {
+    font-size: 0.7rem;
+    padding: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .score-display {
+    padding: 0.2rem;
+    gap: 0.3rem;
+    font-size: 0.65rem;
+  }
+  
+  .score {
+    padding: 0.1rem 0.3rem;
+  }
+  
+  .button-group {
+    gap: 0.3rem;
+  }
+  
+  .btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+    min-height: 24px;
+  }
+  
+  /* Ensure all game controls are visible */
+  #reset-game, #back-to-menu {
+    transform: none !important;
+    min-height: auto;
+    height: auto;
+  }
+}
+
+/* Ultra-emergency compact mode for tiny heights */
+@media (max-height: 330px) {
+  html, body {
+    overflow-y: auto !important;
+    height: auto;
+    min-height: auto;
+  }
+  
+  .app-container {
+    padding: 0.2rem;
+    min-height: auto;
+    overflow-y: auto;
+    height: auto;
+  }
+  
+  header {
+    padding: 0.3rem;
+    margin-bottom: 0.1rem;
+  }
+  
+  .board {
+    max-height: 85px;
+    max-width: 85px;
+    gap: 3px;
+    padding: 3px;
+    margin-bottom: 0.15rem;
+  }
+  
+  .game-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.15rem;
+    margin-bottom: 0.15rem;
+    transform: none !important;
+    box-shadow: none;
+    max-width: 240px;
+  }
+  
+  #player-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 0.15rem;
+  }
+  
+  #current-player {
+    font-size: 0.55rem;
+    padding: 0.1rem;
+    margin-bottom: 0;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    animation: none;
+  }
+  
+  .score-display {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 0.1rem;
+    gap: 0.1rem;
+    font-size: 0.55rem;
+    flex: 2;
+    margin-top: 0;
+    background: none;
+  }
+  
+  .score {
+    padding: 0.08rem 0.12rem;
+    font-size: 0.55rem;
+  }
+  
+  #game-board {
+    position: static;
+    height: auto;
+    min-height: auto;
+    display: block;
+    overflow-y: visible;
+  }
+  
+  .game-board .button-group {
+    display: flex;
+    flex-direction: row;
+    gap: 0.15rem;
+    margin-top: 0.1rem;
+    margin-bottom: 0.15rem;
+    position: relative;
+    z-index: 20;
+    max-width: 200px;
+  }
+  
+  #reset-game, #back-to-menu {
+    font-size: 0.55rem;
+    padding: 0.18rem 0.25rem;
+    min-height: 0;
+    height: auto;
+    transform: none !important;
+    box-shadow: none;
+    margin: 0;
+    flex: 1;
+  }
+  
+  /* Make sure screens are scrollable */
+  main, .screen {
+    overflow-y: visible;
+    height: auto;
+    position: static;
+  }
+  
+  /* Ensure icons in buttons are visible */
+  .btn i {
+    font-size: 0.6rem;
+    margin-right: 0.15rem;
+  }
+  
+  /* Fix for cell sizing */
+  .cell {
+    border-radius: 8px;
+  }
+  
+  .cell.x::before, .cell.x::after {
+    height: 8%;
+  }
+  
+  .cell.o::before {
+    border-width: 5px;
+  }
+}
+
+/* Extreme compact mode for extremely small screens */
+@media (max-height: 300px) {
+  body, html {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+    min-height: auto;
+  }
+  
+  .app-container {
+    padding: 0.15rem;
+    min-height: auto;
+    height: auto;
+  }
+  
+  header {
+    padding: 0.2rem;
+    margin-bottom: 0.1rem;
+  }
+  
+  .logo-container h1 {
+    font-size: 0.9rem;
+  }
+  
+  #app-logo {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .controls button {
+    width: 22px;
+    height: 22px;
+    font-size: 0.65rem;
+  }
+  
+  .board {
+    max-height: 80px;
+    max-width: 80px;
+    gap: 2px;
+    padding: 3px;
+    margin-bottom: 0.15rem;
+  }
+  
+  #game-board {
+    height: auto;
+    min-height: auto;
+    padding-bottom: 5px;
+  }
+  
+  /* Make everything more compact horizontally */
+  .game-info, #player-info {
+    max-width: 100%;
+    width: 100%;
+    box-shadow: none;
+    background: rgba(255, 255, 255, 0.1);
+    transform: none !important;
+    margin-bottom: 0.1rem;
+    padding: 0.1rem;
+  }
+  
+  /* Force single row layout for player info */
+  #player-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.15rem;
+  }
+  
+  #current-player {
+    font-size: 0.55rem;
+    padding: 0.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 0 0 auto;
+    animation: none;
+    margin-bottom: 0;
+  }
+  
+  .score-display {
+    padding: 0.1rem;
+    gap: 0.1rem;
+    font-size: 0.5rem;
+    flex: 1;
+    justify-content: flex-end;
+    margin-top: 0;
+    background: none;
+  }
+  
+  .score {
+    padding: 0.08rem 0.12rem;
+    font-size: 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  .game-board .button-group {
+    flex-direction: row;
+    gap: 0.2rem;
+    margin: 0.1rem 0;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 20;
+  }
+  
+  #reset-game, #back-to-menu {
+    font-size: 0.5rem;
+    padding: 0.15rem 0.25rem;
+    min-height: 0;
+    height: auto;
+    transform: none !important;
+    box-shadow: none;
+    margin: 0;
+    flex: 1;
+    max-width: 48%;
+  }
+  
+  /* Ensure the whole screen can scroll if needed */
+  main {
+    overflow-y: auto;
+    height: auto;
+    min-height: auto;
+    padding: 0.1rem 0;
+  }
+  
+  .screen {
+    position: relative;
+    overflow-y: visible;
+    padding: 0.1rem 0;
+  }
+  
+  .game-board.active {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: auto;
+    left: auto;
+    height: auto;
+  }
+  
+  /* Fix for landscape orientation */
+  @media (orientation: landscape) {
+    .app-container {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-areas: 
+        "header header"
+        "board controls";
+      gap: 0.2rem;
+    }
+    
+    header {
+      grid-area: header;
+    }
+    
+    .board {
+      grid-area: board;
+      margin-right: 0.3rem;
+    }
+    
+    .game-info, .game-board .button-group {
+      grid-area: controls;
+    }
+    
+    #player-info {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .score-display {
+      width: 100%;
+      justify-content: space-between;
+    }
   }
 }
 
