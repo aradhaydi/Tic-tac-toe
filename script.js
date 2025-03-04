@@ -45,14 +45,20 @@ const sounds = {
   bgMusic: new Audio()
 };
 
-// Initialize sounds
-sounds.click.src = 'https://assets.mixkit.co/sfx/preview/mixkit-simple-countdown-922.mp3';
-sounds.win.src = 'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3';
-sounds.lose.src = 'https://assets.mixkit.co/sfx/preview/mixkit-negative-guitar-tone-2324.mp3';
-sounds.tie.src = 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3';
-sounds.bgMusic.src = 'https://assets.mixkit.co/sfx/preview/mixkit-game-level-music-689.mp3';
+// Initialize sounds with local audio files (using free sounds from public domain)
+sounds.click.src = 'https://cdn.freesound.org/previews/573/573629_12593596-lq.mp3';
+sounds.win.src = 'https://cdn.freesound.org/previews/258/258142_4486188-lq.mp3';
+sounds.lose.src = 'https://cdn.freesound.org/previews/131/131657_2398403-lq.mp3';
+sounds.tie.src = 'https://cdn.freesound.org/previews/242/242501_4388906-lq.mp3';
+sounds.bgMusic.src = 'https://cdn.freesound.org/previews/393/393670_7383104-lq.mp3';
 sounds.bgMusic.loop = true;
 sounds.bgMusic.volume = 0.3;
+
+// Preload all sounds
+Object.values(sounds).forEach(sound => {
+  sound.preload = 'auto';
+  sound.load();
+});
 
 // DOM Elements
 const elements = {
@@ -145,6 +151,26 @@ function init() {
 
   // Initialize leaderboard
   initLeaderboard();
+  
+  // Try to unlock audio context for browsers with autoplay restrictions
+  unlockAudioContext();
+  
+  // Make sure settings form reflects current settings
+  syncSettingsFormWithState();
+}
+
+// Sync settings form elements with the current settings state
+function syncSettingsFormWithState() {
+  // Update checkboxes and selects to match current settings
+  elements.settings.soundToggle.checked = settings.soundEnabled;
+  elements.settings.musicToggle.checked = settings.musicEnabled;
+  elements.settings.themeToggle.checked = settings.darkMode;
+  elements.settings.aiDifficultySelect.value = settings.aiDifficulty;
+  
+  // Update color inputs
+  elements.settings.xColor.value = settings.xColor;
+  elements.settings.oColor.value = settings.oColor;
+  elements.settings.gridColor.value = settings.gridColor;
 }
 
 // ==========================================================
@@ -272,29 +298,41 @@ function addEventListeners() {
   });
   
   // Settings form elements
-  elements.settings.soundToggle.addEventListener('change', () => {
+  elements.settings.soundToggle.addEventListener('click', () => {
     settings.soundEnabled = elements.settings.soundToggle.checked;
     saveSettings();
+    // Play a sound to demonstrate sound is enabled (if it was just enabled)
+    if (settings.soundEnabled) {
+      playSound('click');
+    }
   });
   
-  elements.settings.musicToggle.addEventListener('change', () => {
+  elements.settings.musicToggle.addEventListener('click', () => {
     settings.musicEnabled = elements.settings.musicToggle.checked;
-    toggleBackgroundMusic();
     saveSettings();
     
     // Update button icon
     elements.buttons.musicToggle.innerHTML = settings.musicEnabled 
       ? '<i class="fas fa-music"></i>' 
       : '<i class="fas fa-volume-mute"></i>';
+    
+    // Toggle background music
+    toggleBackgroundMusic();
+    
+    // If enabling music, try to play a little sound as feedback
+    if (settings.musicEnabled) {
+      playSound('click');
+    }
   });
   
   elements.settings.aiDifficultySelect.addEventListener('change', () => {
     settings.aiDifficulty = elements.settings.aiDifficultySelect.value;
     gameState.aiDifficulty = settings.aiDifficulty;
     saveSettings();
+    playSound('click');
   });
   
-  elements.settings.themeToggle.addEventListener('change', () => {
+  elements.settings.themeToggle.addEventListener('click', () => {
     settings.darkMode = elements.settings.themeToggle.checked;
     applyTheme();
     saveSettings();
@@ -303,6 +341,8 @@ function addEventListeners() {
     elements.buttons.themeToggle.innerHTML = settings.darkMode 
       ? '<i class="fas fa-moon"></i>' 
       : '<i class="fas fa-sun"></i>';
+    
+    playSound('click');
   });
   
   // Color pickers
@@ -795,24 +835,94 @@ function playSound(type) {
   
   const sound = sounds[type];
   if (sound) {
-    sound.currentTime = 0;
-    sound.play().catch(e => console.log('Error playing sound:', e));
+    // Create and play a clone of the audio to avoid issues with multiple plays
+    const soundClone = sound.cloneNode();
+    soundClone.volume = sound.volume;
+    soundClone.play().catch(e => {
+      console.log('Error playing sound:', e);
+      // Enable sound on next user interaction
+      if (!window.audioContextUnlocked) {
+        unlockAudioContext();
+      }
+    });
   }
 }
 
 // Toggle background music
 function toggleBackgroundMusic() {
   if (settings.musicEnabled) {
-    sounds.bgMusic.play().catch(e => {
-      console.log('Error playing background music:', e);
-      // Try again on user interaction
-      document.addEventListener('click', () => {
-        sounds.bgMusic.play().catch(err => console.log('Failed to play music on click:', err));
-      }, { once: true });
-    });
+    // Try to play music and handle autoplay restrictions
+    const playPromise = sounds.bgMusic.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.catch(e => {
+        console.log('Music play error:', e);
+        if (!window.audioContextUnlocked) {
+          unlockAudioContext();
+        }
+      });
+    }
   } else {
     sounds.bgMusic.pause();
   }
+}
+
+// Unlock audio context on user interaction (needed for browsers that block autoplay)
+function unlockAudioContext() {
+  if (window.audioContextUnlocked) return;
+  
+  window.audioContextUnlocked = false;
+  
+  // Show audio banner if we haven't unlocked audio yet
+  const audioBanner = document.getElementById('audio-banner');
+  audioBanner.classList.add('show');
+  
+  // Create a function to enable audio on interaction
+  const unlockAudio = () => {
+    window.audioContextUnlocked = true;
+    
+    // Try to play all sounds briefly to unlock them
+    Object.values(sounds).forEach(sound => {
+      sound.play().catch(() => {}).then(() => {
+        // Stop immediately
+        if (sound !== sounds.bgMusic) {
+          sound.pause();
+          sound.currentTime = 0;
+        } else if (settings.musicEnabled) {
+          // Keep playing if it's the background music and music is enabled
+          sound.play().catch(e => console.log("Couldn't play background music:", e));
+        } else {
+          sound.pause();
+        }
+      });
+    });
+    
+    // Hide the audio banner
+    audioBanner.classList.remove('show');
+    
+    // If music is enabled, make sure it's playing
+    if (settings.musicEnabled) {
+      sounds.bgMusic.play().catch(e => console.log("Couldn't start background music:", e));
+    }
+    
+    // Play a sound to confirm audio is working
+    if (settings.soundEnabled) {
+      playSound('click');
+    }
+    
+    // Remove the event listeners after first interaction
+    document.removeEventListener('click', unlockAudio);
+    document.removeEventListener('touchstart', unlockAudio);
+    document.removeEventListener('keydown', unlockAudio);
+  };
+  
+  // Add event listeners to unlock audio
+  document.addEventListener('click', unlockAudio);
+  document.addEventListener('touchstart', unlockAudio);
+  document.addEventListener('keydown', unlockAudio);
+  
+  // Make the audio banner clickable too
+  audioBanner.addEventListener('click', unlockAudio);
 }
 
 // ==========================================================

@@ -72,9 +72,10 @@ body.light-mode {
   max-width: 600px;
   margin: 0 auto;
   padding: 1rem;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center; /* Center vertically */
 }
 
 /* Header Styles */
@@ -489,6 +490,8 @@ tr:last-child td {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border-color);
+  margin: 0 auto; /* Center horizontally */
+  text-align: center; /* Center text content */
 }
 
 .modal.active .modal-content {
@@ -498,8 +501,39 @@ tr:last-child td {
 
 .modal-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center the header content */
   align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative; /* For absolute positioning of close button */
+}
+
+.modal-header h2 {
+  margin: 0 auto; /* Center the title */
+}
+
+.close-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* Game result modal specific styles */
+#game-result .modal-body {
+  align-items: center; /* Center modal body content */
+  justify-content: center;
+}
+
+#result-message {
+  font-size: 1.8rem;
+  background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+#result-details {
+  font-size: 1.2rem;
   margin-bottom: 1.5rem;
 }
 
@@ -659,6 +693,47 @@ select, input[type="color"] {
 #splash-screen.hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+#audio-permission-notice {
+  margin-top: 1rem;
+  color: var(--accent-color);
+  font-weight: bold;
+}
+
+/* Audio banner */
+.audio-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 90;
+  text-align: center;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.audio-banner.show {
+  opacity: 1;
+  pointer-events: all;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-10px);
+  }
 }
 
 /* Responsive Styles */
