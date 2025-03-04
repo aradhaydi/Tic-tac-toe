@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'tictactoe-cache-v3';
+const CACHE_NAME = 'tictactoe-cache-v4';
 const APP_SHELL = [
   '/',
   '/index.html',
