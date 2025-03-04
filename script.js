@@ -1024,11 +1024,11 @@ function toggleBackgroundMusic() {
 
 // Simplified audio unlocking for better browser compatibility
 function unlockAudioContext() {
-  // Initialize audio if not already done
+  // Initialize audio if not alreadydone
   if (!audioInitialized) {
     initAudio();
   }
-  
+
   // Only show audio banner if audio not already unlocked
   if (!window.audioUnlocked) {
     const audioBanner = document.getElementById('audio-banner');
@@ -1288,7 +1288,7 @@ function setupReplitAudio() {
     // Create a more aggressive audio unlock strategy for Replit
     const forceUnlockAudio = () => {
       if (window.audioUnlocked) return; // Don't run if already unlocked
-      
+
       console.log('Force unlocking audio in Replit environment');
 
       // Try multiple silent sounds with different formats
@@ -1329,13 +1329,13 @@ function setupReplitAudio() {
       if (settings.musicEnabled) {
         setTimeout(() => toggleBackgroundMusic(), 1000);
       }
-      
+
       // Hide the audio banner
       const audioBanner = document.getElementById('audio-banner');
       if (audioBanner && audioBanner.classList.contains('show')) {
         audioBanner.classList.remove('show');
       }
-      
+
       // Mark as unlocked
       window.audioUnlocked = true;
     };
