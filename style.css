@@ -290,21 +290,21 @@ h2::after {
 .button-group {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 0.8rem;
   width: 100%;
-  max-width: 320px;
+  max-width: 280px;
 }
 
 .btn {
-  padding: 1.2rem 1.8rem;
-  border-radius: 16px;
-  font-size: 1.1rem;
+  padding: 0.9rem 1.4rem;
+  border-radius: 14px;
+  font-size: 1rem;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
+  gap: 0.7rem;
   letter-spacing: 0.02em;
   position: relative;
   overflow: hidden;
@@ -409,16 +409,16 @@ h2::after {
 
 /* ===== GAME BOARD STYLES ===== */
 .game-info {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   text-align: center;
-  padding: 1.5rem;
+  padding: 0.8rem;
   background: rgba(255, 255, 255, 0.07);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  max-width: 380px;
+  max-width: 340px;
   margin-left: auto;
   margin-right: auto;
   transform: translateZ(0);
@@ -426,8 +426,8 @@ h2::after {
 }
 
 .game-info:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .player-x {
@@ -446,16 +446,16 @@ h2::after {
 }
 
 #current-player {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 700;
   display: block;
-  margin-bottom: 0.8rem;
-  padding: 0.8rem;
-  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.08);
   transition: all 0.3s ease;
   animation: pulse-grow 1.5s infinite;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes pulse-grow {
@@ -465,8 +465,8 @@ h2::after {
   }
   50% {
     opacity: 1;
-    transform: scale(1.05);
-    text-shadow: 0 0 15px currentColor;
+    transform: scale(1.03);
+    text-shadow: 0 0 10px currentColor;
   }
   100% {
     opacity: 0.85;
@@ -477,48 +477,48 @@ h2::after {
 .score-display {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  padding: 0.8rem;
-  font-size: 1.2rem;
+  gap: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  margin-top: 1rem;
+  border-radius: 10px;
+  margin-top: 0.5rem;
 }
 
 .score {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
   transition: all 0.3s ease;
   background: rgba(255, 255, 255, 0.05);
 }
 
 .score:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 15px;
+  gap: 12px;
   width: 100%;
-  max-width: 380px;
+  max-width: 320px;
   aspect-ratio: 1/1;
-  margin: 0 auto 2.5rem;
+  margin: 0 auto 1.5rem;
   position: relative;
-  padding: 15px;
+  padding: 12px;
   background: rgba(var(--primary-color-rgb), 0.15);
-  border-radius: 24px;
+  border-radius: 18px;
   box-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.2), 
-    inset 0 0 15px rgba(255, 255, 255, 0.1);
+    0 15px 35px rgba(0, 0, 0, 0.2), 
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
   transform-style: preserve-3d;
-  perspective: 1200px;
-  transform: rotateX(5deg);
-  transition: transform 0.5s ease;
+  perspective: 1000px;
+  transform: rotateX(3deg);
+  transition: transform 0.4s ease;
 }
 
 .board:hover {
@@ -1532,18 +1532,20 @@ input[type="color"] {
   }
   
   .board {
-    max-height: 230px;
-    max-width: 230px;
-    margin-bottom: 1rem;
-    gap: 8px;
+    max-height: 200px;
+    max-width: 200px;
+    margin-bottom: 0.8rem;
+    gap: 6px;
+    padding: 6px;
   }
   
   .game-info {
-    margin-bottom: 0.8rem;
-    padding: 0.6rem;
+    margin-bottom: 0.6rem;
+    padding: 0.5rem;
     background: rgba(255, 255, 255, 0.1);
     box-shadow: none;
     transform: none !important;
+    max-width: 260px;
   }
   
   #player-info {
@@ -1553,34 +1555,37 @@ input[type="color"] {
   }
   
   #current-player {
-    font-size: 1rem;
-    padding: 0.4rem;
-    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    padding: 0.3rem;
+    margin-bottom: 0.3rem;
     width: 100%;
     text-align: center;
     animation: none;
   }
   
   .score-display {
-    padding: 0.4rem;
-    gap: 0.6rem;
-    font-size: 0.9rem;
-    flex-wrap: wrap;
+    padding: 0.3rem;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    flex-wrap: nowrap;
     justify-content: center;
+    margin-top: 0.3rem;
   }
   
   .score {
-    padding: 0.25rem 0.5rem;
-    margin: 0.1rem;
+    padding: 0.2rem 0.4rem;
+    margin: 0;
+    font-size: 0.8rem;
   }
   
   .button-group {
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    gap: 0.4rem;
+    margin-bottom: 0;
+    max-width: 240px;
   }
   
   .btn {
-    padding: 0.5rem 0.8rem;
+    padding: 0.4rem 0.7rem;
     font-size: 0.8rem;
     min-height: auto;
     height: auto;
@@ -1589,7 +1594,7 @@ input[type="color"] {
   }
   
   #reset-game, #back-to-menu {
-    margin-bottom: 0.2rem;
+    margin-bottom: 0;
     white-space: nowrap;
   }
   
@@ -1602,16 +1607,27 @@ input[type="color"] {
   main {
     min-height: auto;
     padding: 0.3rem 0;
+    height: auto;
+    overflow-y: auto;
   }
   
   .screen {
-    overflow-y: auto;
+    overflow-y: visible;
     position: relative;
     top: auto;
     left: auto;
     height: auto;
     min-height: auto;
-    padding-bottom: 1rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  /* Ensure main container is scrollable if content overflows */
+  body, html {
+    overflow-y: auto !important;
+  }
+  
+  .app-container {
+    overflow-y: visible;
   }
 }
 
@@ -1804,10 +1820,17 @@ input[type="color"] {
 
 /* Ultra-emergency compact mode for tiny heights */
 @media (max-height: 330px) {
+  html, body {
+    overflow-y: auto !important;
+    height: auto;
+    min-height: auto;
+  }
+  
   .app-container {
     padding: 0.2rem;
     min-height: auto;
     overflow-y: auto;
+    height: auto;
   }
   
   header {
@@ -1816,22 +1839,23 @@ input[type="color"] {
   }
   
   .board {
-    max-height: 90px;
-    max-width: 90px;
+    max-height: 85px;
+    max-width: 85px;
     gap: 3px;
-    padding: 4px;
-    margin-bottom: 0.2rem;
+    padding: 3px;
+    margin-bottom: 0.15rem;
   }
   
   .game-info {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.15rem;
     padding: 0.15rem;
     margin-bottom: 0.15rem;
     transform: none !important;
     box-shadow: none;
+    max-width: 240px;
   }
   
   #player-info {
@@ -1839,11 +1863,11 @@ input[type="color"] {
     flex-direction: row;
     align-items: center;
     width: 100%;
-    gap: 0.2rem;
+    gap: 0.15rem;
   }
   
   #current-player {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     padding: 0.1rem;
     margin-bottom: 0;
     flex: 1;
@@ -1862,30 +1886,49 @@ input[type="color"] {
     font-size: 0.55rem;
     flex: 2;
     margin-top: 0;
+    background: none;
   }
   
   .score {
-    padding: 0.1rem 0.15rem;
+    padding: 0.08rem 0.12rem;
     font-size: 0.55rem;
+  }
+  
+  #game-board {
+    position: static;
+    height: auto;
+    min-height: auto;
+    display: block;
+    overflow-y: visible;
   }
   
   .game-board .button-group {
     display: flex;
     flex-direction: row;
     gap: 0.15rem;
-    margin-top: 0.15rem;
-    margin-bottom: 0.3rem;
+    margin-top: 0.1rem;
+    margin-bottom: 0.15rem;
     position: relative;
     z-index: 20;
+    max-width: 200px;
   }
   
   #reset-game, #back-to-menu {
     font-size: 0.55rem;
-    padding: 0.2rem 0.3rem;
+    padding: 0.18rem 0.25rem;
     min-height: 0;
     height: auto;
     transform: none !important;
     box-shadow: none;
+    margin: 0;
+    flex: 1;
+  }
+  
+  /* Make sure screens are scrollable */
+  main, .screen {
+    overflow-y: visible;
+    height: auto;
+    position: static;
   }
   
   /* Ensure icons in buttons are visible */
