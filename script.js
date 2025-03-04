@@ -36,8 +36,7 @@ const settings = {
   gridColor: '#95a5a6'
 };
 
-// Audio context and buffer system for better browser compatibility
-let audioContext;
+// Simplified audio system for better reliability
 let audioInitialized = false;
 
 // Audio elements with better handling
@@ -46,38 +45,35 @@ const sounds = {
   win: null,
   lose: null,
   tie: null,
-  bgMusic: null,
-  buffers: {}
+  bgMusic: null
 };
 
-// Audio file paths - using local files in the 'sounds' directory
+// Audio file paths with version parameters to prevent caching issues
 const soundPaths = {
-  click: 'sounds/click.mp3',
-  win: 'sounds/win.mp3',
-  lose: 'sounds/lose.mp3',
-  tie: 'sounds/tie.mp3',
-  bgMusic: 'sounds/background.mp3'
+  click: 'sounds/click.mp3?v=1',
+  win: 'sounds/win.mp3?v=1',
+  lose: 'sounds/lose.mp3?v=1',
+  tie: 'sounds/tie.mp3?v=1',
+  bgMusic: 'sounds/background.mp3?v=1'
 };
 
-// Function to initialize Web Audio API
+// Function to initialize audio system
 function initAudio() {
   if (audioInitialized) return;
   
   try {
-    // Create audio context with suspended state
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    
-    // Create audio elements with proper error handling
+    // Create audio elements with proper settings
     sounds.click = createAudio(soundPaths.click);
     sounds.win = createAudio(soundPaths.win);
     sounds.lose = createAudio(soundPaths.lose);
     sounds.tie = createAudio(soundPaths.tie);
     sounds.bgMusic = createAudio(soundPaths.bgMusic, true);
     
-    // Preload all sounds into both buffers and elements
+    // Preload all sounds
     preloadSounds();
     
     audioInitialized = true;
+    console.log("Audio system initialized successfully");
   } catch (e) {
     console.error("Audio system failed to initialize:", e);
   }
@@ -107,29 +103,20 @@ function createAudio(src, isMusic = false) {
 // Preload all sounds
 function preloadSounds() {
   Object.entries(soundPaths).forEach(([key, path]) => {
-    // Create a separate preload element
+    // Create new audio elements for preloading
     const preloadAudio = new Audio();
     preloadAudio.src = path;
     preloadAudio.preload = 'auto';
     
-    // Also load into Web Audio API buffers
-    if (audioContext) {
-      fetch(path)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Failed to fetch sound: ${path}`);
-          }
-          return response.arrayBuffer();
-        })
-        .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-        .then(audioBuffer => {
-          sounds.buffers[key] = audioBuffer;
-          console.log(`Successfully loaded sound: ${key}`);
-        })
-        .catch(e => {
-          console.error(`Could not load sound ${key}:`, e);
-        });
-    }
+    // Add load event to confirm successful loading
+    preloadAudio.addEventListener('canplaythrough', () => {
+      console.log(`Sound ${key} preloaded successfully`);
+    }, { once: true });
+    
+    // Add error handling
+    preloadAudio.onerror = (e) => {
+      console.error(`Error preloading sound ${key}:`, e);
+    };
   });
 }
 
@@ -354,6 +341,8 @@ function addEventListeners() {
   
   // Settings buttons
   elements.buttons.settings.addEventListener('click', () => {
+    // Make sure settings form reflects current settings before showing
+    syncSettingsFormWithState();
     elements.modals.settings.classList.add('active');
     playSound('click');
   });
@@ -363,21 +352,22 @@ function addEventListeners() {
     playSound('click');
   });
   
-  // Theme toggle button
+  // Theme toggle button in header
   elements.buttons.themeToggle.addEventListener('click', () => {
     settings.darkMode = !settings.darkMode;
     applyTheme();
     saveSettings();
     
-    // Update button icon
+    // Update both button icon and settings form
     elements.buttons.themeToggle.innerHTML = settings.darkMode 
       ? '<i class="fas fa-moon"></i>' 
       : '<i class="fas fa-sun"></i>';
+    elements.settings.themeToggle.checked = settings.darkMode;
     
     playSound('click');
   });
   
-  // Music toggle button
+  // Music toggle button in header
   elements.buttons.musicToggle.addEventListener('click', () => {
     settings.musicEnabled = !settings.musicEnabled;
     
@@ -386,7 +376,7 @@ function addEventListeners() {
       ? '<i class="fas fa-music"></i>' 
       : '<i class="fas fa-volume-mute"></i>';
     
-    // Also update the settings form to keep in sync
+    // Update settings form to keep in sync
     elements.settings.musicToggle.checked = settings.musicEnabled;
     
     // Toggle background music
@@ -397,8 +387,8 @@ function addEventListeners() {
     playSound('click');
   });
   
-  // Settings form elements
-  elements.settings.soundToggle.addEventListener('click', () => {
+  // Sound toggle in settings form
+  elements.settings.soundToggle.addEventListener('change', () => {
     settings.soundEnabled = elements.settings.soundToggle.checked;
     saveSettings();
     
@@ -408,7 +398,8 @@ function addEventListeners() {
     }
   });
   
-  elements.settings.musicToggle.addEventListener('click', () => {
+  // Music toggle in settings form
+  elements.settings.musicToggle.addEventListener('change', () => {
     settings.musicEnabled = elements.settings.musicToggle.checked;
     
     // Update button icon to match setting
@@ -932,169 +923,99 @@ function applyTheme() {
 // Audio Functions
 // ==========================================================
 
-// Play a sound effect using Web Audio API for better compatibility
+// Simplified sound playback function for better reliability
 function playSound(type) {
-  if (!settings.soundEnabled && type !== 'bgMusic') return;
-  if (type === 'bgMusic' && !settings.musicEnabled) return;
+  // Check if sound should play based on settings
+  if (!settings.soundEnabled && type !== 'bgMusic') return false;
+  if (type === 'bgMusic' && !settings.musicEnabled) return false;
   
   // Initialize audio system if not already done
   if (!audioInitialized) {
     initAudio();
   }
   
-  // Make sure audio context is running
-  if (audioContext && audioContext.state === 'suspended') {
-    audioContext.resume().catch(e => console.error('Failed to resume audio context:', e));
-  }
-  
   try {
-    // Try Web Audio API first if the buffer is loaded
-    if (audioContext && audioContext.state === 'running' && sounds.buffers[type]) {
-      try {
-        const source = audioContext.createBufferSource();
-        source.buffer = sounds.buffers[type];
-        
-        // Create gain node to control volume
-        const gainNode = audioContext.createGain();
-        if (type === 'bgMusic') {
-          gainNode.gain.value = 0.3; // Lower volume for background music
-        } else {
-          gainNode.gain.value = 0.7; // Slightly lower for sound effects
-        }
-        
-        source.connect(gainNode).connect(audioContext.destination);
-        source.start(0);
-        console.log(`Playing sound ${type} with Web Audio API`);
-        return true;
-      } catch (webAudioError) {
-        console.error(`Web Audio API playback failed for ${type}:`, webAudioError);
-        // Fall through to Audio element
-      }
-    }
-    
-    // Fallback to Audio element
-    const sound = sounds[type];
-    if (sound) {
-      if (type === 'bgMusic') {
-        // For background music, use the original element
-        if (sound.paused) {
-          sound.currentTime = 0;
-          const promise = sound.play();
-          if (promise) {
-            promise.catch(e => {
-              console.error('Background music playback failed:', e);
-              // Try an alternative approach on error
-              setTimeout(() => {
-                sound.play().catch(() => {}); // Silent catch
-              }, 1000);
-            });
-          }
-        }
-      } else {
-        // For sound effects, create a new instance
-        try {
-          const soundClone = new Audio(soundPaths[type]);
-          soundClone.volume = 0.7;
-          soundClone.play().catch(e => {
-            console.error(`Sound effect playback failed for ${type}:`, e);
-          });
-        } catch (audioError) {
-          console.error(`Error creating audio element for ${type}:`, audioError);
+    // Handle background music specially
+    if (type === 'bgMusic') {
+      if (sounds.bgMusic) {
+        if (sounds.bgMusic.paused) {
+          sounds.bgMusic.currentTime = 0;
+          sounds.bgMusic.play()
+            .then(() => console.log('Background music started'))
+            .catch(e => console.error('Error playing background music:', e));
         }
       }
       return true;
     }
+    
+    // For sound effects, create a fresh audio instance each time
+    const soundClone = new Audio(soundPaths[type]);
+    soundClone.volume = 0.7;
+    
+    // Play the sound
+    soundClone.play()
+      .then(() => console.log(`Sound ${type} played successfully`))
+      .catch(e => console.error(`Error playing sound:`, e));
+    
+    return true;
   } catch (e) {
     console.error('Sound playback error:', e);
     return false;
   }
-  
-  return false;
 }
 
-// Toggle background music with better error handling
+// Simplified background music toggle function
 function toggleBackgroundMusic() {
   // Initialize audio system if not already done
   if (!audioInitialized) {
     initAudio();
   }
   
-  if (settings.musicEnabled) {
-    try {
-      // Resume audio context if suspended
-      if (audioContext && audioContext.state === 'suspended') {
-        audioContext.resume().catch(e => console.error('Failed to resume audio context:', e));
+  try {
+    if (settings.musicEnabled) {
+      // Make sure we have a fresh music element
+      if (!sounds.bgMusic || sounds.bgMusic.error) {
+        sounds.bgMusic = createAudio(soundPaths.bgMusic, true);
       }
       
-      // First stop any currently playing music
-      if (sounds.bgMusic && !sounds.bgMusic.paused) {
-        try {
-          sounds.bgMusic.pause();
-          sounds.bgMusic.currentTime = 0;
-        } catch (pauseError) {
-          console.error('Error stopping current music:', pauseError);
-        }
-      }
-      
-      // Create a fresh instance to avoid issues with previously failed attempts
-      sounds.bgMusic = createAudio(soundPaths.bgMusic, true);
-      
-      // Try to play the background music with multiple approaches
-      setTimeout(() => {
-        const promise = sounds.bgMusic.play();
-        if (promise !== undefined) {
-          promise.catch(e => {
-            console.error('Music play error (handled):', e);
-            // Try a different approach on error
-            setTimeout(() => {
-              // Try playing with user interaction simulation
-              try {
-                document.addEventListener('click', function bgMusicStart() {
-                  sounds.bgMusic.play().catch(() => {});
-                  document.removeEventListener('click', bgMusicStart);
-                }, { once: true });
-              } catch (error) {
-                console.error('Alternative music play approach failed:', error);
-              }
-            }, 1000);
+      // Play the music
+      if (sounds.bgMusic.paused) {
+        // A user gesture is required to play audio, so we'll use the next click
+        const startMusic = () => {
+          sounds.bgMusic.play()
+            .then(() => console.log('Background music started on user interaction'))
+            .catch(e => {
+              console.error('Failed to play music on click:', e);
+              
+              // Create new audio element and try again
+              sounds.bgMusic = createAudio(soundPaths.bgMusic, true);
+              setTimeout(() => {
+                sounds.bgMusic.play().catch(() => {});
+              }, 1000);
+            });
+        };
+        
+        // Try to play now (might work if already had user interaction)
+        sounds.bgMusic.play()
+          .then(() => console.log('Background music started immediately'))
+          .catch(() => {
+            // Set up a one-time click listener if immediate play fails
+            document.addEventListener('click', startMusic, { once: true });
           });
-        }
-      }, 100);
-      
-      // Also try Web Audio API approach
-      if (audioContext && audioContext.state === 'running' && sounds.buffers.bgMusic) {
-        try {
-          const source = audioContext.createBufferSource();
-          source.buffer = sounds.buffers.bgMusic;
-          source.loop = true;
-          
-          const gainNode = audioContext.createGain();
-          gainNode.gain.value = 0.3;
-          
-          source.connect(gainNode).connect(audioContext.destination);
-          source.start(0);
-          console.log('Background music started with Web Audio API');
-        } catch (webAudioError) {
-          console.error('Web Audio API music playback failed:', webAudioError);
-        }
       }
-    } catch (e) {
-      console.error('Music toggle error:', e);
-    }
-  } else {
-    // Pause the music if it's playing
-    try {
+    } else {
+      // Pause the music if it's playing
       if (sounds.bgMusic && !sounds.bgMusic.paused) {
         sounds.bgMusic.pause();
         console.log('Background music paused');
       }
-    } catch (e) {
-      console.error('Error pausing music:', e);
     }
+  } catch (e) {
+    console.error('Music toggle error:', e);
   }
 }
 
-// Improved audio context unlocking for better browser compatibility
+// Simplified audio unlocking for better browser compatibility
 function unlockAudioContext() {
   // Initialize audio if not already done
   if (!audioInitialized) {
@@ -1109,15 +1030,6 @@ function unlockAudioContext() {
   const unlockAudio = () => {
     console.log('Attempting to unlock audio...');
     
-    // Resume the audio context (most important for Web Audio API)
-    if (audioContext) {
-      audioContext.resume().then(() => {
-        console.log('AudioContext resumed successfully');
-      }).catch(e => {
-        console.error('Failed to resume AudioContext:', e);
-      });
-    }
-    
     // Create and play a silent sound to unlock audio
     try {
       const silentSound = new Audio("data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
@@ -1131,31 +1043,15 @@ function unlockAudioContext() {
       console.error('Error creating silent sound:', e);
     }
     
-    // Create a second kick-start method
-    try {
-      if (audioContext) {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        gainNode.gain.value = 0.01; // Very low volume
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        oscillator.start(0);
-        oscillator.stop(0.1); // Short duration
-      }
-    } catch (oscillatorError) {
-      console.error('Oscillator method failed:', oscillatorError);
-    }
-    
-    // Hide the banner
-    audioBanner.classList.remove('show');
+    // Hide the banner after a short delay
+    setTimeout(() => {
+      audioBanner.classList.remove('show');
+    }, 1000);
     
     // Force reload all sound elements
     Object.keys(soundPaths).forEach(key => {
       sounds[key] = createAudio(soundPaths[key], key === 'bgMusic');
     });
-    
-    // Preload sounds again
-    preloadSounds();
     
     // Start background music if enabled
     if (settings.musicEnabled) {
@@ -1167,13 +1063,14 @@ function unlockAudioContext() {
       setTimeout(() => playSound('click'), 700);
     }
     
-    window.audioContextUnlocked = true;
-    
     // Remove event listeners
     document.removeEventListener('click', unlockAudio);
     document.removeEventListener('touchstart', unlockAudio);
     document.removeEventListener('keydown', unlockAudio);
     audioBanner.removeEventListener('click', unlockAudio);
+    
+    // Mark audio as unlocked
+    window.audioUnlocked = true;
   };
   
   // Add event listeners to unlock audio on user interaction
@@ -1182,14 +1079,12 @@ function unlockAudioContext() {
   document.addEventListener('keydown', unlockAudio, { once: true });
   audioBanner.addEventListener('click', unlockAudio, { once: true });
   
-  // Also try to unlock immediately (may work in some browsers)
-  try {
-    if (audioContext && audioContext.state === 'suspended') {
-      audioContext.resume().catch(e => console.error('Initial resume failed:', e));
+  // Also set a timeout to remove the banner if it's not clicked
+  setTimeout(() => {
+    if (audioBanner.classList.contains('show')) {
+      unlockAudio();
     }
-  } catch (e) {
-    console.error('Error in initial audio context resume:', e);
-  }
+  }, 10000);
 }
 
 // ==========================================================

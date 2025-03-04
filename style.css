@@ -703,36 +703,37 @@ select, input[type="color"] {
 /* Audio banner */
 .audio-banner {
   position: fixed;
-  bottom: 20px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
-  padding: 15px 25px;
-  border-radius: 30px;
-  font-size: 1.1rem;
+  transform: translate(-50%, -50%);
+  background-color: var(--accent-color);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 15px;
+  font-size: 1.3rem;
   font-weight: 600;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  z-index: 1000;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
+  z-index: 1500;
   opacity: 0;
-  transition: opacity 0.3s, transform 0.3s;
-  transform: translateX(-50%) translateY(100px);
+  transition: opacity 0.5s, transform 0.5s;
+  transform: translate(-50%, -50%) scale(0.9);
   pointer-events: none;
   text-align: center;
-  border: 2px solid var(--accent-color);
+  border: 3px solid white;
   cursor: pointer;
+  max-width: 90%;
 }
 
 .audio-banner.show {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
   animation: pulse 2s infinite;
 }
 
 .audio-banner.replit-banner {
-  font-size: 1.2rem;
-  padding: 18px 30px;
+  font-size: 1.3rem;
+  padding: 25px 35px;
   background-color: #ff9900;
   color: #000;
   animation: pulse 1.5s infinite;
