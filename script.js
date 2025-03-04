@@ -507,6 +507,14 @@ function startNewGame() {
     winLine.remove();
   }
   
+  // Add animation class
+  elements.game.board.classList.add('new-game');
+  
+  // Remove animation class after animation completes
+  setTimeout(() => {
+    elements.game.board.classList.remove('new-game');
+  }, 1000);
+  
   // Update player turn display
   updatePlayerTurn();
   
