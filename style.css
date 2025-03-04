@@ -1483,6 +1483,7 @@ input[type="color"] {
 @media (max-height: 480px) {
   .app-container {
     min-height: auto;
+    padding-bottom: 0;
   }
   
   main {
@@ -1494,10 +1495,11 @@ input[type="color"] {
   }
   
   .board {
-    max-height: 180px;
-    max-width: 180px;
+    max-height: 160px;
+    max-width: 160px;
     gap: 5px;
     padding: 8px;
+    margin-bottom: 0.5rem;
   }
   
   .cell::before, .cell::after {
@@ -1505,7 +1507,39 @@ input[type="color"] {
   }
   
   .cell.o::before {
-    border-width: 8px;
+    border-width: 6px;
+  }
+  
+  .game-info {
+    transform: none !important;
+    padding: 0.5rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  #current-player {
+    font-size: 0.9rem;
+    padding: 0.3rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .score-display {
+    padding: 0.3rem;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .score {
+    padding: 0.2rem 0.4rem;
+  }
+  
+  .button-group {
+    gap: 0.4rem;
+  }
+  
+  .btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+    margin-bottom: 0;
   }
   
   .modal-content {
@@ -1521,6 +1555,66 @@ input[type="color"] {
   .splash-content {
     padding: 15px;
   }
+  
+  /* Fix sticky Main Menu button */
+  #back-to-menu {
+    margin-bottom: 10px;
+  }
+  
+  /* Make sure screens are scrollable on very small devices */
+  .screen {
+    overflow-y: auto;
+    max-height: 100%;
+    justify-content: flex-start;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+  /* Fixed position header for very small heights */
+  .game-board.screen > .button-group {
+    padding-bottom: 10px;
+  }
+}
+
+/* Fix for extremely small heights */
+@media (max-height: 380px) {
+  .app-container {
+    justify-content: flex-start;
+  }
+  
+  header {
+    margin-bottom: 0.2rem;
+    padding: 0.5rem;
+  }
+  
+  .logo-container h1 {
+    font-size: 1.2rem;
+  }
+  
+  .controls button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  .board {
+    max-height: 130px;
+    max-width: 130px;
+  }
+  
+  /* Make main menu better fit */
+  .screen {
+    padding: 5px 0;
+  }
+  
+  .screen h2 {
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+  }
+  
+  .screen .button-group {
+    margin-bottom: 15px;
+  }
 }
 
 /* Landscape orientation specific adjustments */
@@ -1535,16 +1629,26 @@ input[type="color"] {
     gap: 0.5rem;
     min-height: 100vh;
     max-width: 100%;
+    padding: 0.5rem;
   }
   
   header {
     grid-area: header;
+    margin-bottom: 0.3rem;
+    padding: 0.6rem;
+  }
+  
+  .logo-container h1 {
+    font-size: 1.3rem;
   }
   
   .game-board .board {
     grid-area: board;
     margin-left: auto;
-    margin-right: 1rem;
+    margin-right: 0.8rem;
+    max-height: calc(100vh - 120px);
+    max-width: calc(100vh - 120px);
+    margin-bottom: 0;
   }
   
   .game-board .game-info,
@@ -1553,8 +1657,15 @@ input[type="color"] {
     margin-left: 0;
   }
   
+  .game-info {
+    margin-bottom: 0.6rem;
+    max-width: 100%;
+  }
+  
   .screen {
     padding: 0.5rem;
+    height: calc(100vh - 20px);
+    overflow-y: auto;
   }
   
   .game-board.screen {
@@ -1565,15 +1676,60 @@ input[type="color"] {
       "board buttons";
     gap: 0.5rem;
     justify-content: center;
+    align-items: center;
   }
   
   .game-board .game-info {
     grid-area: info;
+    width: 100%;
+    transform: none !important;
   }
   
   .game-board .button-group {
     grid-area: buttons;
     align-self: flex-start;
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  /* Make sure buttons are visible */
+  #back-to-menu {
+    margin-bottom: 0;
+  }
+  
+  .button-group {
+    gap: 0.5rem;
+  }
+  
+  .btn {
+    padding: 0.6rem 1rem;
+  }
+  
+  /* Smaller score display for landscape */
+  #current-player {
+    font-size: 1.1rem;
+    padding: 0.5rem;
+  }
+}
+
+/* Special case for very small landscape screens */
+@media (max-height: 400px) and (orientation: landscape) {
+  .game-board .board {
+    max-height: calc(100vh - 100px);
+    max-width: calc(100vh - 100px);
+  }
+  
+  .btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.9rem;
+  }
+  
+  header {
+    padding: 0.4rem;
+  }
+  
+  .screen {
+    padding: 0.3rem;
   }
 }
 
