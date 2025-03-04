@@ -1,13 +1,12 @@
 
 {
-  "name": "Tic-Tac-Toe",
+  "name": "Tic-Tac-Toe PWA",
   "short_name": "Tic-Tac-Toe",
-  "description": "Play Tic-Tac-Toe with stunning visual effects and challenging AI.",
+  "description": "A modern Tic-Tac-Toe game with AI opponent and offline support",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#1a1a2e",
+  "theme_color": "#3498db",
   "icons": [
     {
       "src": "images/icon-192.png",

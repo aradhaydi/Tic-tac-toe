@@ -3,13 +3,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Play Tic-Tac-Toe with stunning visual effects and challenging AI. The ultimate modern version of the classic game!">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, height=device-height">
+  <meta name="description" content="Play Tic-Tac-Toe with stunning visual effects, challenging AI, and offline support. The ultimate modern version of the classic game!">
+  <meta name="screen-orientation" content="portrait">
+  <meta name="viewport-fit" content="cover">
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Tic-Tac-Toe">
-  <title>Tic-Tac-Toe</title>
+  <title>Tic-Tac-Toe PWA</title>
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="images/logo.svg">
@@ -75,16 +76,16 @@
       <div id="game-board" class="screen">
         <div class="game-info">
           <div id="player-info">
-            <span id="current-player" class="player-x">X's turn</span>
+            <span id="current-player" class="player-x">Player X's turn</span>
             <div class="score-display">
               <div class="score">
-                <span class="player-x">X:<span id="score-x">0</span></span>
+                <span class="player-x">X: <span id="score-x">0</span></span>
               </div>
               <div class="score">
-                <span class="player-o">O:<span id="score-o">0</span></span>
+                <span class="player-o">O: <span id="score-o">0</span></span>
               </div>
               <div class="score">
-                <span class="player-tie">T:<span id="score-tie">0</span></span>
+                <span class="player-tie">Ties: <span id="score-tie">0</span></span>
               </div>
             </div>
           </div>
