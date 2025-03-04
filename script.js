@@ -1274,6 +1274,38 @@ function updateLeaderboard() {
 }
 
 // ==========================================================
+// PWA Functionality
+// ==========================================================
+
+// Check for cache updates from service worker
+function checkForUpdates() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(registration => {
+      registration.update();
+    });
+  }
+}
+
+// Periodically check for updates (every 30 minutes)
+setInterval(checkForUpdates, 30 * 60 * 1000);
+
+// Handle application offline state
+function handleOfflineState() {
+  const isOnline = navigator.onLine;
+  document.body.classList.toggle('offline-mode', !isOnline);
+  document.body.classList.toggle('online-mode', isOnline);
+  
+  // Update game state text
+  const appHeader = document.querySelector('header h1');
+  if (appHeader) {
+    appHeader.dataset.status = isOnline ? 'online' : 'offline';
+  }
+}
+
+// Check offline state on start
+window.addEventListener('DOMContentLoaded', handleOfflineState);
+
+// ==========================================================
 // Replit-specific audio handling
 // ==========================================================
 
