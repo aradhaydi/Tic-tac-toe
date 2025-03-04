@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'tictactoe-cache-v1';
+const CACHE_NAME = 'tictactoe-cache-v2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -10,12 +10,12 @@ const urlsToCache = [
   '/images/icon-192.png',
   '/images/icon-512.png',
   '/images/logo.svg',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://assets.mixkit.co/sfx/preview/mixkit-simple-countdown-922.mp3',
-  'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3',
-  'https://assets.mixkit.co/sfx/preview/mixkit-negative-guitar-tone-2324.mp3',
-  'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
-  'https://assets.mixkit.co/sfx/preview/mixkit-game-level-music-689.mp3'
+  '/sounds/click.mp3',
+  '/sounds/win.mp3',
+  '/sounds/lose.mp3',
+  '/sounds/tie.mp3',
+  '/sounds/background.mp3',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
 
 // Install event - cache assets

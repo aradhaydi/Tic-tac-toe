@@ -36,29 +36,69 @@ const settings = {
   gridColor: '#95a5a6'
 };
 
-// Audio elements
+// Audio context and buffer system for better browser compatibility
+let audioContext;
+let audioInitialized = false;
+
+// Audio elements with better handling
 const sounds = {
-  click: new Audio(),
-  win: new Audio(),
-  lose: new Audio(),
-  tie: new Audio(),
-  bgMusic: new Audio()
+  click: null,
+  win: null,
+  lose: null,
+  tie: null,
+  bgMusic: null,
+  buffers: {}
 };
 
-// Initialize sounds with local audio files (using free sounds from public domain)
-sounds.click.src = 'https://cdn.freesound.org/previews/573/573629_12593596-lq.mp3';
-sounds.win.src = 'https://cdn.freesound.org/previews/258/258142_4486188-lq.mp3';
-sounds.lose.src = 'https://cdn.freesound.org/previews/131/131657_2398403-lq.mp3';
-sounds.tie.src = 'https://cdn.freesound.org/previews/242/242501_4388906-lq.mp3';
-sounds.bgMusic.src = 'https://cdn.freesound.org/previews/393/393670_7383104-lq.mp3';
-sounds.bgMusic.loop = true;
-sounds.bgMusic.volume = 0.3;
+// Audio file paths - using local files in the 'sounds' directory
+const soundPaths = {
+  click: 'sounds/click.mp3',
+  win: 'sounds/win.mp3',
+  lose: 'sounds/lose.mp3',
+  tie: 'sounds/tie.mp3',
+  bgMusic: 'sounds/background.mp3'
+};
 
-// Preload all sounds
-Object.values(sounds).forEach(sound => {
-  sound.preload = 'auto';
-  sound.load();
-});
+// Function to initialize Web Audio API
+function initAudio() {
+  if (audioInitialized) return;
+  
+  try {
+    // Create audio context
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Create audio elements as fallback
+    sounds.click = new Audio(soundPaths.click);
+    sounds.win = new Audio(soundPaths.win);
+    sounds.lose = new Audio(soundPaths.lose);
+    sounds.tie = new Audio(soundPaths.tie);
+    sounds.bgMusic = new Audio(soundPaths.bgMusic);
+    sounds.bgMusic.loop = true;
+    sounds.bgMusic.volume = 0.3;
+    
+    // Preload all sounds
+    Object.entries(soundPaths).forEach(([key, path]) => {
+      const audio = new Audio();
+      audio.src = path;
+      audio.preload = 'auto';
+      
+      // Also load into Web Audio API for better playback
+      fetch(path)
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+        .then(audioBuffer => {
+          sounds.buffers[key] = audioBuffer;
+        })
+        .catch(e => {
+          console.log(`Could not load sound ${key}:`, e);
+        });
+    });
+    
+    audioInitialized = true;
+  } catch (e) {
+    console.error("Audio system failed to initialize:", e);
+  }
+}
 
 // DOM Elements
 const elements = {
@@ -146,6 +186,9 @@ function init() {
   // Update the UI to match the current state
   updateScoreDisplay();
   
+  // Initialize audio system
+  initAudio();
+  
   // Add event listeners
   addEventListeners();
 
@@ -157,6 +200,24 @@ function init() {
   
   // Make sure settings form reflects current settings
   syncSettingsFormWithState();
+  
+  // Add a listener for visibility changes to handle audio properly
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+}
+
+// Handle page visibility changes
+function handleVisibilityChange() {
+  if (document.hidden) {
+    // Page is hidden, pause background music
+    if (sounds.bgMusic && !sounds.bgMusic.paused) {
+      sounds.bgMusic.pause();
+    }
+  } else {
+    // Page is visible again, resume background music if enabled
+    if (settings.musicEnabled) {
+      setTimeout(() => toggleBackgroundMusic(), 300);
+    }
+  }
 }
 
 // Sync settings form elements with the current settings state
@@ -829,99 +890,149 @@ function applyTheme() {
 // Audio Functions
 // ==========================================================
 
-// Play a sound effect
+// Play a sound effect using Web Audio API for better compatibility
 function playSound(type) {
   if (!settings.soundEnabled) return;
   
-  const sound = sounds[type];
-  if (sound) {
-    // Create and play a clone of the audio to avoid issues with multiple plays
-    const soundClone = sound.cloneNode();
-    soundClone.volume = sound.volume;
-    soundClone.play().catch(e => {
-      console.log('Error playing sound:', e);
-      // Enable sound on next user interaction
-      if (!window.audioContextUnlocked) {
-        unlockAudioContext();
+  // Initialize audio system if not already done
+  if (!audioInitialized) {
+    initAudio();
+  }
+  
+  try {
+    // Try to play using Web Audio API first (most reliable)
+    if (audioContext && audioContext.state === 'running' && sounds.buffers[type]) {
+      const source = audioContext.createBufferSource();
+      source.buffer = sounds.buffers[type];
+      
+      // Create gain node to control volume
+      const gainNode = audioContext.createGain();
+      if (type === 'bgMusic') {
+        gainNode.gain.value = 0.3; // Lower volume for background music
+      } else {
+        gainNode.gain.value = 0.7; // Slightly lower for sound effects
       }
-    });
+      
+      source.connect(gainNode).connect(audioContext.destination);
+      source.start(0);
+      return;
+    }
+    
+    // Fallback to Audio element if Web Audio API is not available
+    const sound = sounds[type];
+    if (sound) {
+      // For non-looping sounds, clone to avoid overlapping issues
+      if (type !== 'bgMusic') {
+        const soundClone = sound.cloneNode();
+        soundClone.volume = type === 'bgMusic' ? 0.3 : 0.7;
+        soundClone.play().catch(e => {
+          console.log('Audio element fallback failed:', e);
+        });
+      } else {
+        // For background music, use the original element
+        sound.play().catch(e => {
+          console.log('Background music playback failed:', e);
+        });
+      }
+    }
+  } catch (e) {
+    console.log('Sound playback error:', e);
   }
 }
 
-// Toggle background music
+// Toggle background music with better error handling
 function toggleBackgroundMusic() {
+  // Initialize audio system if not already done
+  if (!audioInitialized) {
+    initAudio();
+  }
+  
   if (settings.musicEnabled) {
-    // Try to play music and handle autoplay restrictions
-    const playPromise = sounds.bgMusic.play();
-    
-    if (playPromise !== undefined) {
-      playPromise.catch(e => {
-        console.log('Music play error:', e);
-        if (!window.audioContextUnlocked) {
-          unlockAudioContext();
+    try {
+      // Resume audio context if suspended
+      if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      
+      // Try to play the background music
+      if (sounds.bgMusic.paused) {
+        const promise = sounds.bgMusic.play();
+        if (promise !== undefined) {
+          promise.catch(e => {
+            console.log('Music play error (handled):', e);
+            // Try again on next user interaction
+            window.audioContextUnlocked = false;
+          });
         }
-      });
+      }
+    } catch (e) {
+      console.log('Music toggle error (handled):', e);
     }
   } else {
-    sounds.bgMusic.pause();
+    // Pause the music if it's playing
+    if (sounds.bgMusic && !sounds.bgMusic.paused) {
+      sounds.bgMusic.pause();
+    }
   }
 }
 
-// Unlock audio context on user interaction (needed for browsers that block autoplay)
+// Improved audio context unlocking for better browser compatibility
 function unlockAudioContext() {
+  // Initialize audio if not already done
+  if (!audioInitialized) {
+    initAudio();
+  }
+  
   if (window.audioContextUnlocked) return;
   
   window.audioContextUnlocked = false;
   
-  // Show audio banner if we haven't unlocked audio yet
+  // Show audio banner
   const audioBanner = document.getElementById('audio-banner');
   audioBanner.classList.add('show');
   
-  // Create a function to enable audio on interaction
+  // Function to unlock audio on user interaction
   const unlockAudio = () => {
     window.audioContextUnlocked = true;
     
-    // Try to play all sounds briefly to unlock them
-    Object.values(sounds).forEach(sound => {
-      sound.play().catch(() => {}).then(() => {
-        // Stop immediately
-        if (sound !== sounds.bgMusic) {
-          sound.pause();
-          sound.currentTime = 0;
-        } else if (settings.musicEnabled) {
-          // Keep playing if it's the background music and music is enabled
-          sound.play().catch(e => console.log("Couldn't play background music:", e));
-        } else {
-          sound.pause();
-        }
-      });
-    });
+    // Resume the audio context (most important for Web Audio API)
+    if (audioContext && audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
     
-    // Hide the audio banner
+    // Create a short silent buffer to "kick-start" the audio system
+    if (audioContext) {
+      const kickStartBuffer = audioContext.createBuffer(1, 1, 22050);
+      const source = audioContext.createBufferSource();
+      source.buffer = kickStartBuffer;
+      source.connect(audioContext.destination);
+      source.start(0);
+    }
+    
+    // Hide the banner
     audioBanner.classList.remove('show');
     
-    // If music is enabled, make sure it's playing
+    // Start background music if enabled
     if (settings.musicEnabled) {
-      sounds.bgMusic.play().catch(e => console.log("Couldn't start background music:", e));
+      setTimeout(() => toggleBackgroundMusic(), 500);
     }
     
-    // Play a sound to confirm audio is working
+    // Play a test sound with a delay
     if (settings.soundEnabled) {
-      playSound('click');
+      setTimeout(() => playSound('click'), 700);
     }
     
-    // Remove the event listeners after first interaction
+    // Remove event listeners
     document.removeEventListener('click', unlockAudio);
     document.removeEventListener('touchstart', unlockAudio);
     document.removeEventListener('keydown', unlockAudio);
+    audioBanner.removeEventListener('click', unlockAudio);
   };
   
-  // Add event listeners to unlock audio
+  // Add event listeners to unlock audio on user interaction
   document.addEventListener('click', unlockAudio);
   document.addEventListener('touchstart', unlockAudio);
   document.addEventListener('keydown', unlockAudio);
-  
-  // Make the audio banner clickable too
   audioBanner.addEventListener('click', unlockAudio);
 }
 
@@ -1103,6 +1214,61 @@ function updateLeaderboard() {
 }
 
 // ==========================================================
+// Replit-specific audio handling
+// ==========================================================
+
+// Special function for handling audio in Replit environment
+function setupReplitAudio() {
+  // Check if we're in a Replit environment
+  const isReplit = window.location.hostname.includes('replit');
+  
+  if (isReplit) {
+    // Create a more aggressive audio unlock strategy for Replit
+    const forceUnlockAudio = () => {
+      if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      
+      // Force play a silent sound to unlock audio
+      const silentSound = new Audio("data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABGgD///////////////////////////////////////////////8AAAAA//////////////////////////////////////////////////////////////////8=");
+      silentSound.play().catch(e => console.log("Silent sound unlock failed:", e));
+      
+      // Try to unlock all game sounds
+      Object.values(sounds).forEach(sound => {
+        if (sound && typeof sound.play === 'function') {
+          const promise = sound.play();
+          if (promise) {
+            promise.then(() => {
+              sound.pause();
+              sound.currentTime = 0;
+            }).catch(e => console.log("Sound unlock failed:", e));
+          }
+        }
+      });
+      
+      // Remove these event listeners after trying once
+      document.removeEventListener('click', forceUnlockAudio);
+      document.removeEventListener('touchstart', forceUnlockAudio);
+      document.removeEventListener('keydown', forceUnlockAudio);
+    };
+    
+    // Add these event listeners immediately
+    document.addEventListener('click', forceUnlockAudio);
+    document.addEventListener('touchstart', forceUnlockAudio);
+    document.addEventListener('keydown', forceUnlockAudio);
+    
+    // Update the splash screen message to be more explicit
+    const audioPermissionNotice = document.getElementById('audio-permission-notice');
+    if (audioPermissionNotice) {
+      audioPermissionNotice.innerHTML = '<strong>Tap anywhere for relaxing sounds & music</strong><br>(Browser restrictions require user interaction)';
+    }
+  }
+}
+
+// ==========================================================
 // Initialization
 // ==========================================================
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+  setupReplitAudio();
+});

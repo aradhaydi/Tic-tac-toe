@@ -1,10 +1,35 @@
-entrypoint="index.html"
-hidden=[".config"]
-modules = ["web:v2-20230623-0b7a606"]
 
+# The command that runs the program. If the interpreter field is set, it will have priority and this run command will do nothing
+run = "python -m http.server 8000 --bind 0.0.0.0"
+
+# The primary language of the repl. There can be others, though!
+language = "html"
+entrypoint = "index.html"
+audio = true
+
+# Specifies which nix channel to use when building the environment
 [nix]
 channel = "stable-23_11"
 
 [deployment]
-publicDir = "/"
-deploymentTarget = "static"
+run = ["sh", "-c", "python -m http.server 8000 --bind 0.0.0.0"]
+
+[languages]
+
+[languages.javascript]
+pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
+
+[languages.javascript.languageServer]
+start = "typescript-language-server --stdio"
+
+[languages.html]
+pattern = "**/*.html"
+
+[languages.html.languageServer]
+start = "vscode-html-language-server --stdio"
+
+[languages.css]
+pattern = "**/*.css"
+
+[languages.css.languageServer]
+start = "vscode-css-language-server --stdio"
