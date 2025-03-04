@@ -215,7 +215,7 @@
 
   <div id="splash-screen">
     <div class="splash-content">
-      <svg id="splash-logo" width="100" height="100" viewBox="0 0 100 100">
+      <svg id="splash-logo" width="120" height="120" viewBox="0 0 100 100">
         <circle cx="50" cy="50" r="45" fill="none" stroke="#3498db" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="283">
           <animate attributeName="stroke-dashoffset" from="283" to="0" dur="1.5s" begin="0s" fill="freeze" />
         </circle>
@@ -224,7 +224,15 @@
         </path>
       </svg>
       <h1>Tic-Tac-Toe</h1>
-      <p>Loading...</p>
+      <div class="game-description">
+        <p>Challenge the AI or play with a friend!</p>
+        <p>The ultimate classic game with modern style</p>
+      </div>
+      <div class="loading-indicator">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
       <p id="audio-permission-notice">Tap anywhere for sound & music</p>
     </div>
   </div>
