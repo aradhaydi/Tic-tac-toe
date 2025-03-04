@@ -38,21 +38,25 @@ const settings = {
 
 // Audio elements
 const sounds = {
-  click: new Audio(),
-  win: new Audio(),
-  lose: new Audio(),
-  tie: new Audio(),
-  bgMusic: new Audio()
+  click: null,
+  win: null,
+  lose: null,
+  tie: null,
+  bgMusic: null
 };
 
-// Initialize sounds
-sounds.click.src = 'https://assets.mixkit.co/sfx/preview/mixkit-simple-countdown-922.mp3';
-sounds.win.src = 'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3';
-sounds.lose.src = 'https://assets.mixkit.co/sfx/preview/mixkit-negative-guitar-tone-2324.mp3';
-sounds.tie.src = 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3';
-sounds.bgMusic.src = 'https://assets.mixkit.co/sfx/preview/mixkit-game-level-music-689.mp3';
-sounds.bgMusic.loop = true;
-sounds.bgMusic.volume = 0.3;
+// Initialize sounds - we'll create them only when needed to avoid autoplay restrictions
+function initSounds() {
+  if (!sounds.click) sounds.click = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-simple-countdown-922.mp3');
+  if (!sounds.win) sounds.win = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3');
+  if (!sounds.lose) sounds.lose = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-negative-guitar-tone-2324.mp3');
+  if (!sounds.tie) sounds.tie = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3');
+  if (!sounds.bgMusic) {
+    sounds.bgMusic = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-game-level-music-689.mp3');
+    sounds.bgMusic.loop = true;
+    sounds.bgMusic.volume = 0.3;
+  }
+}
 
 // DOM Elements
 const elements = {
@@ -120,14 +124,6 @@ const elements = {
 
 // Initialize the game
 function init() {
-  // Hide splash screen after animation completes
-  setTimeout(() => {
-    elements.splashScreen.classList.add('hidden');
-    setTimeout(() => {
-      elements.splashScreen.style.display = 'none';
-    }, 500);
-  }, 2000);
-
   // Load settings
   loadSettings();
   
@@ -145,6 +141,40 @@ function init() {
 
   // Initialize leaderboard
   initLeaderboard();
+  
+  // Handle splash screen interaction for audio permission
+  elements.splashScreen.addEventListener('click', () => {
+    // Initialize audio context on user interaction
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) {
+      const audioCtx = new AudioContext();
+      window.audioContextInitialized = true;
+    }
+    
+    // Initialize sounds
+    initSounds();
+    
+    // Try playing background music if enabled
+    if (settings.musicEnabled) {
+      sounds.bgMusic.play().catch(e => console.log('Music play error:', e));
+    }
+    
+    // Hide splash screen after click
+    elements.splashScreen.classList.add('hidden');
+    setTimeout(() => {
+      elements.splashScreen.style.display = 'none';
+    }, 500);
+  });
+  
+  // If not clicked after 3 seconds, auto-hide splash screen
+  setTimeout(() => {
+    if (!elements.splashScreen.classList.contains('hidden')) {
+      elements.splashScreen.classList.add('hidden');
+      setTimeout(() => {
+        elements.splashScreen.style.display = 'none';
+      }, 500);
+    }
+  }, 3000);
 }
 
 // ==========================================================
@@ -751,24 +781,28 @@ function applySettings() {
   document.documentElement.style.setProperty('--o-color', settings.oColor);
   document.documentElement.style.setProperty('--grid-color', settings.gridColor);
   
-  // Update settings form
-  elements.settings.soundToggle.checked = settings.soundEnabled;
-  elements.settings.musicToggle.checked = settings.musicEnabled;
-  elements.settings.aiDifficultySelect.value = settings.aiDifficulty;
-  elements.settings.themeToggle.checked = settings.darkMode;
-  elements.settings.xColor.value = settings.xColor;
-  elements.settings.oColor.value = settings.oColor;
-  elements.settings.gridColor.value = settings.gridColor;
+  // Make sure elements exist before trying to update them
+  if (elements.settings.soundToggle) elements.settings.soundToggle.checked = settings.soundEnabled;
+  if (elements.settings.musicToggle) elements.settings.musicToggle.checked = settings.musicEnabled;
+  if (elements.settings.aiDifficultySelect) elements.settings.aiDifficultySelect.value = settings.aiDifficulty;
+  if (elements.settings.themeToggle) elements.settings.themeToggle.checked = settings.darkMode;
+  if (elements.settings.xColor) elements.settings.xColor.value = settings.xColor;
+  if (elements.settings.oColor) elements.settings.oColor.value = settings.oColor;
+  if (elements.settings.gridColor) elements.settings.gridColor.value = settings.gridColor;
   
   // Update theme toggle button
-  elements.buttons.themeToggle.innerHTML = settings.darkMode 
-    ? '<i class="fas fa-moon"></i>' 
-    : '<i class="fas fa-sun"></i>';
+  if (elements.buttons.themeToggle) {
+    elements.buttons.themeToggle.innerHTML = settings.darkMode 
+      ? '<i class="fas fa-moon"></i>' 
+      : '<i class="fas fa-sun"></i>';
+  }
   
   // Update music toggle button
-  elements.buttons.musicToggle.innerHTML = settings.musicEnabled 
-    ? '<i class="fas fa-music"></i>' 
-    : '<i class="fas fa-volume-mute"></i>';
+  if (elements.buttons.musicToggle) {
+    elements.buttons.musicToggle.innerHTML = settings.musicEnabled 
+      ? '<i class="fas fa-music"></i>' 
+      : '<i class="fas fa-volume-mute"></i>';
+  }
   
   // Apply music setting
   toggleBackgroundMusic();
@@ -793,24 +827,63 @@ function applyTheme() {
 function playSound(type) {
   if (!settings.soundEnabled) return;
   
+  // Initialize sounds if needed
+  initSounds();
+  
   const sound = sounds[type];
   if (sound) {
+    // Reset sound to beginning
     sound.currentTime = 0;
-    sound.play().catch(e => console.log('Error playing sound:', e));
+    
+    // For mobile compatibility, we need a user gesture to play audio
+    // So we make the first click initialize the audio context
+    if (window.audioContextInitialized !== true) {
+      // Create and start a silent audio context to enable audio on mobile
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) {
+        const audioCtx = new AudioContext();
+        window.audioContextInitialized = true;
+      }
+    }
+    
+    // Play with error handling
+    const playPromise = sound.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(e => {
+        console.log('Error playing sound:', e);
+      });
+    }
   }
 }
 
 // Toggle background music
 function toggleBackgroundMusic() {
-  if (settings.musicEnabled) {
-    sounds.bgMusic.play().catch(e => {
-      console.log('Error playing background music:', e);
-      // Try again on user interaction
-      document.addEventListener('click', () => {
-        sounds.bgMusic.play().catch(err => console.log('Failed to play music on click:', err));
-      }, { once: true });
-    });
-  } else {
+  // Initialize sounds if needed
+  initSounds();
+  
+  if (settings.musicEnabled && sounds.bgMusic) {
+    // For mobile compatibility
+    if (window.audioContextInitialized !== true) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) {
+        const audioCtx = new AudioContext();
+        window.audioContextInitialized = true;
+      }
+    }
+    
+    const playPromise = sounds.bgMusic.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(e => {
+        console.log('Error playing background music:', e);
+        // Add a message to inform the user they need to interact with the page
+        document.addEventListener('click', () => {
+          if (settings.musicEnabled && sounds.bgMusic) {
+            sounds.bgMusic.play().catch(err => console.log('Failed to play music on click:', err));
+          }
+        });
+      });
+    }
+  } else if (sounds.bgMusic) {
     sounds.bgMusic.pause();
   }
 }

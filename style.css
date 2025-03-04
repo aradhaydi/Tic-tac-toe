@@ -72,9 +72,11 @@ body.light-mode {
   max-width: 600px;
   margin: 0 auto;
   padding: 1rem;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Header Styles */
@@ -654,6 +656,15 @@ select, input[type="color"] {
   font-size: 1rem;
   color: var(--text-color);
   opacity: 0.8;
+}
+
+#audio-note {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(52, 152, 219, 0.2);
+  border-radius: 20px;
+  border: 1px solid var(--primary-color);
 }
 
 #splash-screen.hidden {
