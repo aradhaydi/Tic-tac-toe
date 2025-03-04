@@ -1495,8 +1495,8 @@ input[type="color"] {
   }
   
   .board {
-    max-height: 160px;
-    max-width: 160px;
+    max-height: 150px;
+    max-width: 150px;
     gap: 5px;
     padding: 8px;
     margin-bottom: 0.5rem;
@@ -1512,34 +1512,42 @@ input[type="color"] {
   
   .game-info {
     transform: none !important;
-    padding: 0.5rem;
+    padding: 0.4rem;
     margin-bottom: 0.3rem;
+    max-width: 320px;
   }
   
   #current-player {
-    font-size: 0.9rem;
-    padding: 0.3rem;
-    margin-bottom: 0.3rem;
+    font-size: 0.8rem;
+    padding: 0.25rem;
+    margin-bottom: 0.25rem;
   }
   
   .score-display {
-    padding: 0.3rem;
-    gap: 0.5rem;
-    font-size: 0.8rem;
+    padding: 0.25rem;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   
   .score {
-    padding: 0.2rem 0.4rem;
+    padding: 0.15rem 0.35rem;
+    font-size: 0.75rem;
   }
   
   .button-group {
     gap: 0.4rem;
+    margin-top: 0.3rem;
   }
   
   .btn {
-    padding: 0.4rem 0.7rem;
-    font-size: 0.8rem;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
     margin-bottom: 0;
+    white-space: nowrap;
   }
   
   .modal-content {
@@ -1580,26 +1588,28 @@ input[type="color"] {
 @media (max-height: 380px) {
   .app-container {
     justify-content: flex-start;
+    padding: 0.4rem;
   }
   
   header {
     margin-bottom: 0.2rem;
-    padding: 0.5rem;
+    padding: 0.4rem;
   }
   
   .logo-container h1 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
   .controls button {
-    width: 28px;
-    height: 28px;
-    font-size: 0.8rem;
+    width: 26px;
+    height: 26px;
+    font-size: 0.75rem;
   }
   
   .board {
-    max-height: 130px;
-    max-width: 130px;
+    max-height: 120px;
+    max-width: 120px;
+    margin-bottom: 0.4rem;
   }
   
   /* Make main menu better fit */
@@ -1608,12 +1618,129 @@ input[type="color"] {
   }
   
   .screen h2 {
-    margin-bottom: 0.8rem;
-    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
   }
   
   .screen .button-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+  }
+  
+  /* Super compact player info */
+  .game-info {
+    padding: 0.3rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  #current-player {
+    font-size: 0.7rem;
+    padding: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .score-display {
+    padding: 0.2rem;
+    gap: 0.3rem;
+    font-size: 0.65rem;
+  }
+  
+  .score {
+    padding: 0.1rem 0.3rem;
+  }
+  
+  .button-group {
+    gap: 0.3rem;
+  }
+  
+  .btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+    min-height: 24px;
+  }
+  
+  /* Ensure all game controls are visible */
+  #reset-game, #back-to-menu {
+    transform: none !important;
+    min-height: auto;
+    height: auto;
+  }
+}
+
+/* Ultra-emergency compact mode for tiny heights */
+@media (max-height: 330px) {
+  .app-container {
+    padding: 0.3rem;
+  }
+  
+  header {
+    padding: 0.3rem;
+    margin-bottom: 0.1rem;
+  }
+  
+  .board {
+    max-height: 100px;
+    max-width: 100px;
+    gap: 3px;
+    padding: 5px;
+    margin-bottom: 0.3rem;
+  }
+  
+  .game-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  #player-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 0.3rem;
+  }
+  
+  #current-player {
+    font-size: 0.65rem;
+    padding: 0.15rem;
+    margin-bottom: 0;
+    flex: 1;
+  }
+  
+  .score-display {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 0.15rem;
+    gap: 0.2rem;
+    font-size: 0.6rem;
+    flex: 2;
+    margin-top: 0;
+  }
+  
+  .score {
+    padding: 0.1rem 0.2rem;
+    font-size: 0.6rem;
+  }
+  
+  .game-board .button-group {
+    display: flex;
+    flex-direction: row;
+    gap: 0.2rem;
+  }
+  
+  #reset-game, #back-to-menu {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.4rem;
+    min-height: 0;
+  }
+  
+  /* Ensure icons in buttons are visible */
+  .btn i {
+    font-size: 0.7rem;
+    margin-right: 0.2rem;
   }
 }
 
