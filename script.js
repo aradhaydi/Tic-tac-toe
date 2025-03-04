@@ -1024,76 +1024,74 @@ function toggleBackgroundMusic() {
 
 // Simplified audio unlocking for better browser compatibility
 function unlockAudioContext() {
-  // Initialize audio if not alreadydone
+  // Initialize audio if not already done
   if (!audioInitialized) {
     initAudio();
   }
 
-  // Only show audio banner if audio not already unlocked
-  if (!window.audioUnlocked) {
-    const audioBanner = document.getElementById('audio-banner');
-    audioBanner.classList.add('show');
+  // Show audio banner
+  const audioBanner = document.getElementById('audio-banner');
+  audioBanner.classList.add('show');
 
-    // Function to unlock audio on user interaction
-    const unlockAudio = () => {
-      console.log('Attempting to unlock audio...');
+  // Function to unlock audio on user interaction
+  const unlockAudio = () => {
+    console.log('Attempting to unlock audio...');
 
-      // Create and play a silent sound to unlock audio
-      try {
-        const silentSound = new Audio("data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
-        silentSound.volume = 0.1;
-        silentSound.play().then(() => {
-          console.log('Silent sound played successfully');
-        }).catch(e => {
-          console.error('Silent sound playback failed:', e);
-        });
-      } catch (e) {
-        console.error('Error creating silent sound:', e);
-      }
-
-      // Hide the banner after a short delay
-      setTimeout(() => {
-        audioBanner.classList.remove('show');
-      }, 1000);
-
-      // Force reload all sound elements
-      Object.keys(soundPaths).forEach(key => {
-        sounds[key] = createAudio(soundPaths[key], key === 'bgMusic');
+    // Create and play a silent sound to unlock audio
+    try {
+      const silentSound = new Audio("data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+      silentSound.volume = 0.1;
+      silentSound.play().then(() => {
+        console.log('Silent sound played successfully');
+      }).catch(e => {
+        console.error('Silent sound playback failed:', e);
       });
+    } catch (e) {
+      console.error('Error creating silent sound:', e);
+    }
 
-      // Start background music if enabled
-      if (settings.musicEnabled) {
-        setTimeout(() => toggleBackgroundMusic(), 500);
-      }
-
-      // Play a test sound with a delay
-      if (settings.soundEnabled) {
-        setTimeout(() => playSound('click'), 700);
-      }
-
-      // Remove event listeners
-      document.removeEventListener('click', unlockAudio);
-      document.removeEventListener('touchstart', unlockAudio);
-      document.removeEventListener('keydown', unlockAudio);
-      audioBanner.removeEventListener('click', unlockAudio);
-
-      // Mark audio as unlocked
-      window.audioUnlocked = true;
-    };
-
-    // Add event listeners to unlock audio on user interaction
-    document.addEventListener('click', unlockAudio, { once: true });
-    document.addEventListener('touchstart', unlockAudio, { once: true });
-    document.addEventListener('keydown', unlockAudio, { once: true });
-    audioBanner.addEventListener('click', unlockAudio, { once: true });
-
-    // Also set a timeout to remove the banner if it's not clicked
+    // Hide the banner after a short delay
     setTimeout(() => {
-      if (audioBanner && audioBanner.classList.contains('show')) {
-        unlockAudio();
-      }
-    }, 10000);
-  }
+      audioBanner.classList.remove('show');
+    }, 1000);
+
+    // Force reload all sound elements
+    Object.keys(soundPaths).forEach(key => {
+      sounds[key] = createAudio(soundPaths[key], key === 'bgMusic');
+    });
+
+    // Start background music if enabled
+    if (settings.musicEnabled) {
+      setTimeout(() => toggleBackgroundMusic(), 500);
+    }
+
+    // Play a test sound with a delay
+    if (settings.soundEnabled) {
+      setTimeout(() => playSound('click'), 700);
+    }
+
+    // Remove event listeners
+    document.removeEventListener('click', unlockAudio);
+    document.removeEventListener('touchstart', unlockAudio);
+    document.removeEventListener('keydown', unlockAudio);
+    audioBanner.removeEventListener('click', unlockAudio);
+
+    // Mark audio as unlocked
+    window.audioUnlocked = true;
+  };
+
+  // Add event listeners to unlock audio on user interaction
+  document.addEventListener('click', unlockAudio, { once: true });
+  document.addEventListener('touchstart', unlockAudio, { once: true });
+  document.addEventListener('keydown', unlockAudio, { once: true });
+  audioBanner.addEventListener('click', unlockAudio, { once: true });
+
+  // Also set a timeout to remove the banner if it's not clicked
+  setTimeout(() => {
+    if (audioBanner.classList.contains('show')) {
+      unlockAudio();
+    }
+  }, 10000);
 }
 
 // ==========================================================
@@ -1282,14 +1280,17 @@ function setupReplitAudio() {
   // Check if we're in a Replit environment
   const isReplit = window.location.hostname.includes('replit');
 
-  if (isReplit && !window.audioUnlocked) {
+  if (isReplit) {
     console.log('Replit environment detected, setting up special audio handling');
 
     // Create a more aggressive audio unlock strategy for Replit
     const forceUnlockAudio = () => {
-      if (window.audioUnlocked) return; // Don't run if already unlocked
-
       console.log('Force unlocking audio in Replit environment');
+
+      // Resume audio context
+      if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume().catch(e => console.error('Force resume failed:', e));
+      }
 
       // Try multiple silent sounds with different formats
       const silentSoundMP3 = new Audio("data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABGgD///////////////////////////////////////////////8AAAAA//////////////////////////////////////////////////////////////////8=");
@@ -1300,6 +1301,23 @@ function setupReplitAudio() {
       const silentSoundWAV = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
       silentSoundWAV.volume = 0.1;
       silentSoundWAV.play().catch(e => console.log("WAV silent sound unlock failed:", e));
+
+      // Create short oscillator sound (this often works when other methods fail)
+      try {
+        if (audioContext) {
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          gainNode.gain.value = 0.01; // Very low volume
+          oscillator.type = 'sine';
+          oscillator.frequency.value = 440; // A4 note
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          oscillator.start(0);
+          oscillator.stop(audioContext.currentTime + 0.05); // Very short duration
+        }
+      } catch (oscillatorError) {
+        console.error('Oscillator method failed:', oscillatorError);
+      }
 
       // Recreate all audio elements
       sounds.click = createAudio(soundPaths.click);
@@ -1329,15 +1347,6 @@ function setupReplitAudio() {
       if (settings.musicEnabled) {
         setTimeout(() => toggleBackgroundMusic(), 1000);
       }
-
-      // Hide the audio banner
-      const audioBanner = document.getElementById('audio-banner');
-      if (audioBanner && audioBanner.classList.contains('show')) {
-        audioBanner.classList.remove('show');
-      }
-
-      // Mark as unlocked
-      window.audioUnlocked = true;
     };
 
     // Add event listeners with options for better control
